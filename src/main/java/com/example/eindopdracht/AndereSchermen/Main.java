@@ -4,7 +4,9 @@ import com.example.eindopdracht.Hoofdschermen.LedenPaginaTeams;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,19 +36,30 @@ public class Main extends Application {
         gebruikersnaam.setId("gebruikersnaam");
         gebruikersnaam.setMaxWidth(500);
 
-        TextField wachtwoord = new TextField();
+        PasswordField wachtwoord = new PasswordField();
         wachtwoord.setPromptText("Wachtwoord");
         wachtwoord.setId("wachtwoord");
         wachtwoord.setMaxWidth(500);
 
         Button inlog = new Button("Inlog");
         inlog.setOnAction(e -> {
-            LedenPaginaTeams ledenPage = new LedenPaginaTeams(primaryStage);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            primaryStage.setScene(ledenScene);  // Set the new scene
+            String inputGebruikersnaam = gebruikersnaam.getText();
+            String inputWachtwoord = wachtwoord.getText();
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            if (DatabaseManager.authenticateUser(inputGebruikersnaam, inputWachtwoord)) {
+                // If authentication is successful, go to the next scene
+                LedenPaginaTeams ledenPage = new LedenPaginaTeams(primaryStage);
+                Scene ledenScene = new Scene(ledenPage.getRoot(), 1280, 720);
+                primaryStage.setScene(ledenScene);
+                ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            } else {
+                // Show error if login fails
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Login Mislukt");
+                alert.setHeaderText("Ongeldige gebruikersnaam of wachtwoord");
+                alert.setContentText("Probeer opnieuw.");
+                alert.showAndWait();
+            }
         });
 
         // Add elements to VBox

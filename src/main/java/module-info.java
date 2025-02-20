@@ -10,6 +10,7 @@ module com.example.eindopdracht {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.desktop;
+    requires java.sql;
 
     opens com.example.eindopdracht to javafx.fxml;
     exports com.example.eindopdracht;
