@@ -1,16 +1,15 @@
 package com.example.eindopdracht.Hoofdschermen;
 
+import com.example.eindopdracht.AndereSchermen.LedenPaginaLedenToevoegScherm;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class LedenPaginaLeden extends Application {
@@ -205,6 +204,7 @@ public class LedenPaginaLeden extends Application {
         btnlinks8.setMinWidth(300);
         GridPane.setHalignment(btnlinks8, Pos.CENTER.getHpos());
 
+
         Button btnlinks9 = new Button("Lid verwijderen");
         btnlinks9.setTranslateY(25);
         btnlinks9.setMinWidth(300);
@@ -244,30 +244,78 @@ public class LedenPaginaLeden extends Application {
 
         HBox hbox2 = new HBox();
         Button btnitem1 = new Button("Voornaam");
-        btnitem1.setMinWidth(110);
+        btnitem1.setMinWidth(150);
         Button btnitem2 = new Button("Achternaam");
-        btnitem2.setMinWidth(110);
-        Button btnitem3 = new Button("Email");
-        btnitem3.setMinWidth(110);
-        Button btnitem4 = new Button("Telefoonnummer");
-        btnitem4.setMinWidth(110);
-        Button btnitem5 = new Button("Team");
-        btnitem5.setMinWidth(110);
-        Button btnitem6 = new Button("Geboortedatum");
-        btnitem6.setMinWidth(110);
-        Button btnitem7 = new Button("Activiteit");
-        btnitem7.setMinWidth(110);
+        btnitem2.setMinWidth(150);
+        Button btnitem3 = new Button("Team");
+        btnitem3.setMinWidth(150);
+        Button btnitem4 = new Button("Rol");
+        btnitem4.setMinWidth(150);
+        Button btnitem5 = new Button("Geboortedatum");
+        btnitem5.setMinWidth(150);
+
+
 
         Button btnmenuknop = new Button("Reset");
-        btnmenuknop.setMinWidth(130);
+        btnmenuknop.setMinWidth(150);
 
         hbox2.setTranslateY(-670);
         hbox2.setTranslateX(380);
 
-        hbox2.getChildren().addAll(btnitem1, btnitem2, btnitem3, btnitem4, btnitem5, btnitem6, btnitem7, btnmenuknop);
+        hbox2.getChildren().addAll(btnitem1, btnitem2, btnitem3, btnitem4, btnitem5, btnmenuknop);
+
+        HBox hbox3 = new HBox();
+
+        Label txt1 = new Label("1");
+        txt1.setMinWidth(150);
+        txt1.getStyleClass().add("MenuItemText");
+        txt1.setMinHeight(25);
+        txt1.setAlignment(Pos.CENTER);
+
+        Label txt2 = new Label("2");
+        txt2.setMinWidth(150);
+        txt2.getStyleClass().add("MenuItemText");
+        txt2.setMinHeight(25);
+        txt2.setAlignment(Pos.CENTER);
+
+        Label txt3 = new Label("3");
+        txt3.setMinWidth(150);
+        txt3.getStyleClass().add("MenuItemText");
+        txt3.setMinHeight(25);
+        txt3.setAlignment(Pos.CENTER);
+
+        Label txt4 = new Label("4");
+        txt4.setMinWidth(150);
+        txt4.getStyleClass().add("MenuItemText");
+        txt4.setMinHeight(25);
+        txt4.setAlignment(Pos.CENTER);
+
+        Label txt5 = new Label("5");
+        txt5.setMinWidth(150);
+        txt5.getStyleClass().add("MenuItemText");
+        txt5.setMinHeight(25);
+        txt5.setAlignment(Pos.CENTER);
+
+
+
+
+        Pane pane3 = new Pane();
+        Button btnmenu = new Button("Refresh");
+        btnmenu.setMinHeight(20);
+        btnmenu.setMinWidth(150);
+
+        pane3.getChildren().addAll(btnmenu);
+        pane3.setMinWidth(150);
+        pane3.setMinHeight(20);
+
+        hbox3.setTranslateY(-670);
+        hbox3.setTranslateX(380);
+        hbox3.setMinHeight(50);
+        hbox3.getChildren().addAll(txt1, txt2, txt3, txt4, txt5, pane3);
+
 
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2, hbox2);
+        vbox.getChildren().addAll(hbox, pane2, hbox2, hbox3);
 
 
         // Create a scene and set it on the stage

@@ -8,13 +8,19 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class VeldenPaginaWedstrijdenToevoegScherm extends Application {
     private Stage stage7;
@@ -57,103 +63,129 @@ public class VeldenPaginaWedstrijdenToevoegScherm extends Application {
 
 
     }
+
     public Parent getRoot7() {
-        StackPane root = new StackPane(); // StackPane to keep everything centered
-        VBox vbox = new VBox(25); // VBox to organize elements vertically with spacing
+        VBox vbox = new VBox(10); // VBox to organize elements vertically with spacing
         vbox.setAlignment(Pos.CENTER); // Center the VBox itself
 
-        Button btnterug = new Button();
+        // Create the "terug" button
+        Button btnterug = new Button("Terug");
         btnterug.setMinWidth(50);
         btnterug.setMinHeight(50);
-        btnterug.setTranslateY(-103);
+        btnterug.setTranslateY(-400);
         btnterug.setTranslateX(-350);
         btnterug.setOnAction(e -> {
             VeldenPaginaWedstrijden VeldenPage = new VeldenPaginaWedstrijden(stage7);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(VeldenPage.getRoot3(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage7.setScene(ledenScene);  // Set the new scene
-
+            Scene ledenScene = new Scene(VeldenPage.getRoot3(), 1280, 720);
+            stage7.setScene(ledenScene);
             ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
         });
 
-        // UI Elements
-        Text text = new Text("Wedstrijd toevoegen");
+        // Title text
+        Text text = new Text("Wedstrijd Toevoegen");
         text.setId("text1");
-        text.setTranslateY(-103);
+        text.setTranslateY(0);
 
-        TextField tf1 = new TextField("Team A:");
-        tf1.setMinWidth(150);
-        tf1.setMinHeight(40);
-        GridPane.setHalignment(tf1, Pos.CENTER.getHpos());
+        // Team 1 ComboBox
+        ComboBox<String> team1ComboBox = new ComboBox<>();
+        team1ComboBox.setMaxWidth(600);
+        team1ComboBox.setMinHeight(40);
+        team1ComboBox.getItems().add("Geen team");
+        List<String> teams = DatabaseManager.getTeamNames();
+        if (!teams.isEmpty()) {
+            team1ComboBox.getItems().addAll(teams);
+            team1ComboBox.setValue(teams.get(0)); // Default value
+        } else {
+            team1ComboBox.setPromptText("Geen teams gevonden");
+        }
 
-        TextField tf2 = new TextField("Team B:");
-        tf2.setMinWidth(150);
-        tf2.setMinHeight(40);
-        GridPane.setHalignment(tf2, Pos.CENTER.getHpos());
+        // Team 2 TextField (manual input)
+        TextField team2TextField = new TextField();
+        team2TextField.setPromptText("Voer tegenstander in");
+        team2TextField.setMaxWidth(600);
+        team2TextField.setMinHeight(40);
 
-        TextField tf3 = new TextField("Datum:");
-        tf3.setMinWidth(150);
-        tf3.setMinHeight(40);
-        GridPane.setHalignment(tf3, Pos.CENTER.getHpos());
+        // DateTime Picker for selecting match date and time
+        TextField dateTimeField = new TextField();
+        dateTimeField.setPromptText("Kies datum en tijd (yyyy-MM-dd HH:mm)");
+        dateTimeField.setMaxWidth(600);
+        dateTimeField.setMinHeight(40);
 
-        TextField tf4 = new TextField("Tijd:");
-        tf4.setMinWidth(150);
-        tf4.setMinHeight(40);
-        GridPane.setHalignment(tf4, Pos.CENTER.getHpos());
+        // ComboBox for selecting field (Veld 1 - 8)
+        ComboBox<Integer> veldComboBox = new ComboBox<>();
+        for (int i = 1; i <= 8; i++) {
+            veldComboBox.getItems().add(i);
+        }
+        veldComboBox.setPromptText("Kies een veld (1-8)");
+        veldComboBox.setMaxWidth(600);
+        veldComboBox.setMinHeight(40);
 
-        TextField tf5 = new TextField("Veld:");
-        tf5.setMinWidth(300);
-        tf5.setMinHeight(40);
-        GridPane.setHalignment(tf5, Pos.CENTER.getHpos());
+        // Save Button
+        Button btnOpslaan = new Button("Opslaan");
+        btnOpslaan.setMaxWidth(300);
+        btnOpslaan.setMaxHeight(40);
+        btnOpslaan.setMinHeight(50);
+        btnOpslaan.setTranslateY(85);
 
-        TextField tf6 = new TextField("Scheidsrechter:");
-        tf6.setMinWidth(300);
-        tf6.setMinHeight(40);
-        GridPane.setHalignment(tf6, Pos.CENTER.getHpos());
+        // Button Action Handler
+        btnOpslaan.setOnAction(e -> {
+            String team1 = team1ComboBox.getValue();
+            String team2 = team2TextField.getText();
+            String dateTimeInput = dateTimeField.getText();
+            Integer selectedVeld = veldComboBox.getValue();
 
+            // Validate input fields
+            if (team1 == null || team2.isEmpty() || dateTimeInput.isEmpty() || selectedVeld == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Vul alle velden in!");
+                alert.showAndWait();
+                return;
+            }
 
+            try {
+                // Convert date-time string to LocalDateTime
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime selectedDateTime = LocalDateTime.parse(dateTimeInput, formatter);
 
-        Button btnopslaan = new Button("Opslaan");;
-        GridPane.setHalignment(btnopslaan, Pos.CENTER.getHpos());
-        btnopslaan.setMaxWidth(600);
-        btnopslaan.setMaxHeight(300);
-        btnopslaan.setMinHeight(50);
-        btnopslaan.setTranslateY(52);
-        btnopslaan.setOnAction(e -> {
-            LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage7);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage7.setScene(ledenScene);  // Set the new scene
+                // Get Team1ID based on team1 name
+                int team1Id = DatabaseManager.getTeamIdByName(team1);
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                // Save match data to database
+                boolean success = DatabaseManager.insertWedstrijd(team1Id, team2, selectedDateTime, selectedVeld);
+
+                if (success) {
+                    // Show success alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Wedstrijd succesvol toegevoegd!");
+                    alert.showAndWait();
+
+                    VeldenPaginaWedstrijden veldenPage = new VeldenPaginaWedstrijden(stage7);
+                    Scene veldenScene = new Scene(veldenPage.getRoot3(), 1280, 720);
+                    stage7.setScene(veldenScene);
+                    veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                } else {
+                    // Show error alert
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Fout bij opslaan van wedstrijd!");
+                    alert.showAndWait();
+
+                }
+            } catch (Exception ex) {
+                // Show invalid date-time format alert
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Ongeldig datum- en tijdformaat!");
+                alert.showAndWait();
+            }
         });
 
-        GridPane pane = new GridPane();
-        pane.setTranslateY(-25);
-        pane.setAlignment(Pos.CENTER);
-        pane.setVgap(25);
-        pane.setHgap(25);
-        pane.setId("pane1");
-        // pane.setMaxWidth(381.5);
-        //  pane2.setPrefWidth(380);
-        //
-        pane.add(tf1, 0, 0);
-        pane.add(tf2, 1, 0);
-        pane.add(tf3, 0, 1);
-        pane.add(tf4, 1, 1);
-        pane.add(tf5, 0, 2);
-        pane.add(tf6, 1, 2);
+        // Add all components to the VBox
+        vbox.getChildren().addAll(text, team1ComboBox, team2TextField, dateTimeField, veldComboBox, btnOpslaan, btnterug);
 
-
-        vbox.getChildren().addAll(btnterug, text, pane, btnopslaan);
-
-        // Add VBox to StackPane
+        // Use a StackPane to center the VBox
+        StackPane root = new StackPane();
         root.getChildren().add(vbox);
 
-        // Create scene  and set stage
         return root;
-
-
-
     }
 }
+
+// UI Elements
+
+
+

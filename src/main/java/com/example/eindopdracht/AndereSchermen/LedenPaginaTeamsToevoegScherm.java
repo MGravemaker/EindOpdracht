@@ -2,17 +2,20 @@ package com.example.eindopdracht.AndereSchermen;
 
 import com.example.eindopdracht.Hoofdschermen.LedenPaginaTeams;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class LedenPaginaTeamsToevoegScherm extends Application {
     private Stage stage5;
@@ -81,32 +84,45 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
         text.setId("text1");
         text.setTranslateY(-50);
 
-        TextField gebruikersnaam = new TextField();
-        gebruikersnaam.setPromptText("Teamnaam:"); // Placeholder text
-        gebruikersnaam.setId("gebruikersnaam");
-        gebruikersnaam.setMaxWidth(600);
-        gebruikersnaam.setMaxHeight(300);
-        gebruikersnaam.setMinHeight(50);
+        TextField tf1 = new TextField();
+        tf1.setPromptText("Teamnaam:"); // Placeholder text
+        tf1.setId("gebruikersnaam");
+        tf1.setMaxWidth(600);
+        tf1.setMaxHeight(300);
+        tf1.setMinHeight(50);
 
-        Button btn1 = new Button("Spelers lijst aanpassen");
-        btn1.setMinWidth(300);
-        GridPane.setHalignment(btn1, HPos.CENTER);
-        btn1.setMaxWidth(600);
-        btn1.setMaxHeight(300);
-        btn1.setMinHeight(50);
+        ListView<String> spelersListView = new ListView<>();
+        spelersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multiple selection
 
-        Button btn2 = new Button("Trainers lijst aanpassen");
-        GridPane.setHalignment(btn2, HPos.CENTER);
-        btn2.setMaxWidth(600);
-        btn2.setMaxHeight(300);
-        btn2.setMinHeight(50);
+        // Get player names from database and populate ListView
+        List<String> spelers = DatabaseManager.getLidnamen();
+        ObservableList<String> observableSpelers = FXCollections.observableArrayList(spelers);
+        spelersListView.setItems(observableSpelers);
 
-        Button btn3 = new Button("Team activiteit: actief");
+        // Set max size
+        spelersListView.setMaxHeight(300);
+        spelersListView.setMaxWidth(600);
 
-        GridPane.setHalignment(btn3, HPos.CENTER);
-        btn3.setMaxWidth(600);
-        btn3.setMaxHeight(300);
-        btn3.setMinHeight(50);
+
+        ComboBox<String> trainerComboBox = new ComboBox<>();
+        trainerComboBox.getItems().add("Geen trainer"); // Default option
+
+        List<String> trainerNames = DatabaseManager.getTrainerNames();
+        trainerComboBox.getItems().addAll(trainerNames);
+
+
+        trainerComboBox.setValue("Geen trainer");
+
+
+        ComboBox<String> activiteitComboBox = new ComboBox<>();
+        activiteitComboBox.getItems().addAll("Actief", "Nonactief");
+        activiteitComboBox.setValue("Actief"); // Default value
+        activiteitComboBox.setMinWidth(600);
+        activiteitComboBox.setMinHeight(50);
+        GridPane.setHalignment(activiteitComboBox, HPos.CENTER);
+
+
+
 
         Button btnopslaan = new Button("Opslaan");;
         GridPane.setHalignment(btnopslaan, Pos.CENTER.getHpos());
@@ -114,12 +130,29 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
         btnopslaan.setMaxHeight(300);
         btnopslaan.setMinHeight(50);
         btnopslaan.setOnAction(e -> {
-            LedenPaginaTeams ledenPage = new LedenPaginaTeams(stage5);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage5.setScene(ledenScene);  // Set the new scene
+            String teamNaam = tf1.getText();
+            String activiteit = activiteitComboBox.getValue();
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            // Get selected trainer
+            String selectedTrainer = trainerComboBox.getValue();
+
+            // Convert trainer name to LidID
+            Integer trainerLidId = selectedTrainer.equals("Geen trainer") ? null : DatabaseManager.getLidIdByName(selectedTrainer);
+
+            // Insert into database
+            boolean success = DatabaseManager.insertTeam(teamNaam, activiteit, trainerLidId);
+
+            if (success) {
+                System.out.println("Team succesvol toegevoegd!");
+
+                // Reload the page or navigate back to the team overzicht
+                LedenPaginaTeams teamsPage = new LedenPaginaTeams(stage5);
+                Scene teamsScene = new Scene(teamsPage.getRoot(), 1280, 720);
+                stage5.setScene(teamsScene);
+                teamsScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            } else {
+                System.out.println("Fout bij toevoegen team!");
+            }
         });
 
 
@@ -130,7 +163,7 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
 
         // Add elements to VBox
        // vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
-        vbox.getChildren().addAll(btnterug, text, gebruikersnaam,btn1,btn2,btn3, btnopslaan);
+        vbox.getChildren().addAll(btnterug, text, tf1,spelersListView ,trainerComboBox,activiteitComboBox, btnopslaan);
 
         // Add VBox to StackPane
         root.getChildren().add(vbox);

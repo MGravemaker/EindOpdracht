@@ -8,12 +8,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class LedenPaginaLedenToevoegScherm extends Application {
     private Stage stage6;
@@ -110,66 +113,100 @@ public class LedenPaginaLedenToevoegScherm extends Application {
         tf6.setMinHeight(40);
         GridPane.setHalignment(tf6, Pos.CENTER.getHpos());
 
-        TextField tf7 = new TextField("Team:");
-        tf7.setMinWidth(300);
-        tf7.setMinHeight(40);
-        GridPane.setHalignment(tf7, Pos.CENTER.getHpos());
-
-        TextField tf8 = new TextField("Rol:");
-        tf8.setMinHeight(40);
-        tf8.setMinWidth(300);
-        GridPane.setHalignment(tf8, Pos.CENTER.getHpos());
+        ComboBox<String> TeamNaam = new ComboBox<>();
+        TeamNaam.setMaxWidth(600);
+        TeamNaam.setMinHeight(50);
+        GridPane.setHalignment(TeamNaam, HPos.CENTER);
 
 
+        List<String> teams = DatabaseManager.getTeamNames();
 
-        Button btnopslaan = new Button("Opslaan");;
-        GridPane.setHalignment(btnopslaan, Pos.CENTER.getHpos());
-        btnopslaan.setMaxWidth(600);
-        btnopslaan.setMaxHeight(300);
-        btnopslaan.setMinHeight(50);
-        btnopslaan.setTranslateY(20);
-        btnopslaan.setOnAction(e -> {
-            LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage6);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage6.setScene(ledenScene);  // Set the new scene
+        TeamNaam.getItems().add("Geen team");
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+        if (!teams.isEmpty()) {
+            TeamNaam.getItems().addAll(teams);
+            TeamNaam.setValue(teams.get(0));
+        } else {
+            TeamNaam.setPromptText("Geen teams gevonden");
+        }
+
+
+        TeamNaam.setOnAction(event -> {
+            if ("Geen team".equals(TeamNaam.getValue())) {
+                TeamNaam.setValue(null);
+            }
         });
-
-        GridPane pane = new GridPane();
-        pane.setTranslateY(-25);
-        pane.setAlignment(Pos.CENTER);
-        pane.setVgap(25);
-        pane.setHgap(25);
-        pane.setId("pane1");
-       // pane.setMaxWidth(381.5);
-        //  pane2.setPrefWidth(380);
-        //
-        pane.add(tf1, 0, 0);
-        pane.add(tf2, 1, 0);
-        pane.add(tf3, 0, 1);
-        pane.add(tf4, 1, 1);
-        pane.add(tf5, 0, 2);
-        pane.add(tf6, 1, 2);
-        pane.add(tf7, 0, 3);
-        pane.add(tf8, 1, 3);
+            TextField tf8 = new TextField("Rol:");
+            tf8.setMinHeight(40);
+            tf8.setMinWidth(300);
+            GridPane.setHalignment(tf8, Pos.CENTER.getHpos());
 
 
+            Button btnopslaan = new Button("Opslaan");
+            ;
+            GridPane.setHalignment(btnopslaan, Pos.CENTER.getHpos());
+            btnopslaan.setMaxWidth(600);
+            btnopslaan.setMaxHeight(300);
+            btnopslaan.setMinHeight(50);
+            btnopslaan.setTranslateY(20);
+            btnopslaan.setOnAction(e -> {
+                String voornaam = tf1.getText();
+                String achternaam = tf2.getText();
+                String email = tf3.getText();
+                String telefoonnummer = tf4.getText();
+                String geboortedatum = tf5.getText();
+                String geslacht = tf6.getText();
+                String team = TeamNaam.getValue();
+                String rol = tf8.getText();
+
+                // Insert into database
+                boolean success = DatabaseManager.insertLid(voornaam, achternaam, email, telefoonnummer, geboortedatum, geslacht, team, rol);
+
+                if (success) {
+                    System.out.println("Lid succesvol toegevoegd!");
+
+                    LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage6);
+                    // Instead of directly setting the scene, use the getRoot() to get the layout
+                    Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
+                    stage6.setScene(ledenScene);  // Set the new scene
+
+                    ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                } else {
+                    System.out.println("Fout bij toevoegen lid!");
+                }
+
+            });
+
+            GridPane pane = new GridPane();
+            pane.setTranslateY(-25);
+            pane.setAlignment(Pos.CENTER);
+            pane.setVgap(25);
+            pane.setHgap(25);
+            pane.setId("pane1");
+            // pane.setMaxWidth(381.5);
+            //  pane2.setPrefWidth(380);
+            //
+            pane.add(tf1, 0, 0);
+            pane.add(tf2, 1, 0);
+            pane.add(tf3, 0, 1);
+            pane.add(tf4, 1, 1);
+            pane.add(tf5, 0, 2);
+            pane.add(tf6, 1, 2);
+            pane.add(TeamNaam, 0, 3);
+            pane.add(tf8, 1, 3);
 
 
-        // Add elements to VBox
-        // vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
-        //vbox.getChildren().addAll(btnterug, text, gebruikersnaam,btn1,btn2,btn3, btnopslaan);
-        vbox.getChildren().addAll(btnterug, text, pane, btnopslaan);
+            // Add elements to VBox
+            // vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
+            //vbox.getChildren().addAll(btnterug, text, gebruikersnaam,btn1,btn2,btn3, btnopslaan);
+            vbox.getChildren().addAll(btnterug, text, pane, btnopslaan);
 
-        // Add VBox to StackPane
-        root.getChildren().add(vbox);
+            // Add VBox to StackPane
+            root.getChildren().add(vbox);
 
-        // Create scene  and set stage
-        return root;
+            // Create scene  and set stage
+            return root;
 
 
-
+        }
     }
-}

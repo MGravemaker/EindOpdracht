@@ -6,8 +6,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LedenPaginaTeams extends Application {
@@ -195,18 +197,72 @@ public class LedenPaginaTeams extends Application {
         pane2.add(btnlinks11, 0, 3);
         GridPane.setColumnSpan(btnlinks11, 2);
 
+    HBox hbox3 = new HBox();
+
+        Label txt1 = new Label("1");
+        txt1.setMinWidth(187.5);
+        txt1.getStyleClass().add("MenuItemText");
+        txt1.setMinHeight(25);
+        txt1.setAlignment(Pos.CENTER);
+
+        Label txt2 = new Label("2");
+        txt2.setMinWidth(187.5);
+        txt2.getStyleClass().add("MenuItemText");
+        txt2.setMinHeight(25);
+        txt2.setAlignment(Pos.CENTER);
+
+        Label txt3 = new Label("3");
+        txt3.setMinWidth(187.5);
+        txt3.getStyleClass().add("MenuItemText");
+        txt3.setMinHeight(25);
+        txt3.setAlignment(Pos.CENTER);
+
+        Label txt4 = new Label("4");
+        txt4.setMinWidth(187.5);
+        txt4.getStyleClass().add("MenuItemText");
+        txt4.setMinHeight(25);
+        txt4.setAlignment(Pos.CENTER);
+
+
+
+
+
+        Pane pane3 = new Pane();
+    Button btnmenu = new Button("Refresh");
+    btnmenu.setMinHeight(20);
+    btnmenu.setMinWidth(150);
+
+    pane3.getChildren().addAll(btnmenu);
+    pane3.setMinWidth(150);
+    pane3.setMinHeight(20);
+
+    hbox3.setTranslateY(-670);
+    hbox3.setTranslateX(380);
+    hbox3.setMinHeight(50);
+    hbox3.getChildren().addAll(txt1, txt2, txt3, txt4, pane3);
+
+
+
+
         // Top-right HBox with buttons for interacting with team data
         HBox hbox2 = new HBox();
         Button btnitem1 = new Button("Team naam");
         btnitem1.setMinWidth(187.5);
+        btnitem1.setMinHeight(35);
         Button btnitem2 = new Button("Aantal spelers");
         btnitem2.setMinWidth(187.5);
+        btnitem2.setMinHeight(35);
         Button btnitem3 = new Button("Trainer");
         btnitem3.setMinWidth(187.5);
+        btnitem3.setMinHeight(35);
         Button btnitem4 = new Button("Activiteit");
         btnitem4.setMinWidth(187.5);
+        btnitem4.setMinHeight(35);
         Button btnmenuknop = new Button("Reset");
+        btnmenuknop.setMinHeight(35);
         btnmenuknop.setMinWidth(150);
+
+
 
         hbox2.setTranslateY(-670);
         hbox2.setTranslateX(380);
@@ -214,7 +270,7 @@ public class LedenPaginaTeams extends Application {
 
         // Main VBox layout that contains the full scene structure
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2, hbox2);
+        vbox.getChildren().addAll(hbox, pane2, hbox2, hbox3);
 
 
 
