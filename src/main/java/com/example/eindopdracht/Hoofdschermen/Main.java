@@ -1,6 +1,6 @@
-package com.example.eindopdracht.AndereSchermen;
+package com.example.eindopdracht.Hoofdschermen;
 
-import com.example.eindopdracht.Hoofdschermen.LedenPaginaTeams;
+import com.example.eindopdracht.AndereSchermen.DatabaseManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

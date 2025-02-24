@@ -11,8 +11,47 @@
     -fx-min-height: 50;
     -fx-font-size: 17;
 }
-.MenuItemText{
+.MenuItemText, .cell-label{
     -fx-border-width: 1px;
     -fx-border-style: solid;
     -fx-border-color: #000;
+}
+.cell-label {
+    -fx-min-width: 150px;
+    -fx-min-height: 30px;
+    -fx-alignment: center;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+.cell-label2 {
+    -fx-min-width: 375px;
+    -fx-min-height: 30px;
+    -fx-alignment: center;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+
+.cell-label3 {
+    -fx-min-width: 187.5px;
+    -fx-min-height: 30px;
+    -fx-alignment: center;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+
+.delete-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-min-width: 150px;
+    -fx-min-height: 30px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: darkred;
 }

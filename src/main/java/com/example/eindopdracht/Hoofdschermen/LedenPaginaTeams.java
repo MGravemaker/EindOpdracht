@@ -1,18 +1,25 @@
 package com.example.eindopdracht.Hoofdschermen;
 
+import com.example.eindopdracht.AndereSchermen.DatabaseManager;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class LedenPaginaTeams extends Application {
+    private static DatabaseManager.Team selectedTeam;
     private Stage stage;
 
 
@@ -20,6 +27,7 @@ public class LedenPaginaTeams extends Application {
 
         launch(args);
     }
+
     public LedenPaginaTeams(Stage stage) {
         this.stage = stage;
 
@@ -69,17 +77,16 @@ public class LedenPaginaTeams extends Application {
         });
 
 
-
         Button btn2 = new Button("Veldenbeheer");
         btn2.setMinWidth(190);
         btn2.getStyleClass().add("Knoppen");
-       btn2.setOnAction(e -> {
-       VeldenPaginaWedstrijden veldenPage = new VeldenPaginaWedstrijden(stage);
+        btn2.setOnAction(e -> {
+            VeldenPaginaWedstrijden veldenPage = new VeldenPaginaWedstrijden(stage);
             // Instead of directly setting the scene, use the getRoot() to get the layout
-         Scene veldenScene = new Scene(veldenPage.getRoot3(), 1280, 720);  // Getting the root from LedenPaginaTeams
-          stage.setScene(veldenScene);  // Set the new scene
+            Scene veldenScene = new Scene(veldenPage.getRoot3(), 1280, 720);  // Getting the root from LedenPaginaTeams
+            stage.setScene(veldenScene);  // Set the new scene
 
-           veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
         });
 
         Button btn3 = new Button("Teams");
@@ -92,12 +99,12 @@ public class LedenPaginaTeams extends Application {
         btn4.getStyleClass().add("Knoppen");
         btn4.setTranslateY(-190);
         btn4.setOnAction(e -> {
-                    LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage);
-                    // Instead of directly setting the scene, use the getRoot() to get the layout
-                    Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-                    stage.setScene(ledenScene);  // Set the new scene
+            LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage);
+            // Instead of directly setting the scene, use the getRoot() to get the layout
+            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
+            stage.setScene(ledenScene);  // Set the new scene
 
-                    ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
         });
 
         // Left side TextField and Buttons
@@ -106,29 +113,40 @@ public class LedenPaginaTeams extends Application {
         Linkstf1.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, HPos.CENTER);
 
-        Button btnlinks2 = new Button("Spelers lijst aanpassen");
-        btnlinks2.setMinWidth(300);
-        GridPane.setHalignment(btnlinks2, HPos.CENTER);
+        ListView<String> spelersListView = new ListView<>();
+        spelersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multiple selection
 
-        Button btnlinks3 = new Button("Trainers lijst aanpassen");
-        btnlinks3.setMinWidth(300);
-        GridPane.setHalignment(btnlinks3, HPos.CENTER);
+        // Get player names from database and populate ListView
+        List<String> spelers = DatabaseManager.getLidnamen();
+        ObservableList<String> observableSpelers = FXCollections.observableArrayList(spelers);
+        spelersListView.setItems(observableSpelers);
 
-        Button btnlinks4 = new Button("Team activiteit: actief");
-        btnlinks4.setMinWidth(300);
-        GridPane.setHalignment(btnlinks4, HPos.CENTER);
+        // Set max size
+        spelersListView.setMaxHeight(100);
+        spelersListView.setMaxWidth(250);
+        GridPane.setHalignment(spelersListView, HPos.CENTER);
+
+
+        ComboBox<String> activiteitComboBox = new ComboBox<>();
+        activiteitComboBox.getItems().addAll("ACTIEF", "NONACTIEF");
+        activiteitComboBox.setValue("ACTIEF"); // Default value
+        activiteitComboBox.setMinWidth(250);
+        activiteitComboBox.setMinHeight(50);
+        GridPane.setHalignment(activiteitComboBox, HPos.CENTER);
 
         Button btnlinks5 = new Button("Dit team verwijderen");
-        btnlinks5.setMinWidth(300);
+        btnlinks5.setMinWidth(250);
         GridPane.setHalignment(btnlinks5, HPos.CENTER);
+
 
         Button btnlinks6 = new Button("Opslaan");
         btnlinks6.setMinWidth(250);
         GridPane.setHalignment(btnlinks6, HPos.CENTER);
+        btnlinks6.setOnAction(e -> {});
 
         // Left panel GridPane Layout
         GridPane pane = new GridPane();
-        pane.setVgap(25);
+        pane.setVgap(20);
         pane.setId("pane");
         pane.setMinWidth(380);
         pane.setMinHeight(430);
@@ -137,16 +155,15 @@ public class LedenPaginaTeams extends Application {
         pane.add(btn2, 1, 0);
         pane.add(Linkstf1, 0, 1);
         GridPane.setColumnSpan(Linkstf1, 2);
-        pane.add(btnlinks2, 0, 2);
-        GridPane.setColumnSpan(btnlinks2, 2);
-        pane.add(btnlinks3, 0, 3);
-        GridPane.setColumnSpan(btnlinks3, 2);
-        pane.add(btnlinks4, 0, 4);
-        GridPane.setColumnSpan(btnlinks4, 2);
-        pane.add(btnlinks5, 0, 5);
+        pane.add(spelersListView, 0, 2);
+        GridPane.setColumnSpan(spelersListView, 2);
+        pane.add(activiteitComboBox, 0, 3);
+        GridPane.setColumnSpan(activiteitComboBox, 2);
+        pane.add(btnlinks5, 0, 4);
         GridPane.setColumnSpan(btnlinks5, 2);
-        pane.add(btnlinks6, 0, 6);
+        pane.add(btnlinks6, 0, 5);
         GridPane.setColumnSpan(btnlinks6, 2);
+
 
         // HBox to hold the left pane and btn3, btn4
         HBox hbox = new HBox();  // Add spacing between elements
@@ -197,83 +214,173 @@ public class LedenPaginaTeams extends Application {
         pane2.add(btnlinks11, 0, 3);
         GridPane.setColumnSpan(btnlinks11, 2);
 
-    HBox hbox3 = new HBox();
-
-        Label txt1 = new Label("1");
-        txt1.setMinWidth(187.5);
-        txt1.getStyleClass().add("MenuItemText");
-        txt1.setMinHeight(25);
-        txt1.setAlignment(Pos.CENTER);
-
-        Label txt2 = new Label("2");
-        txt2.setMinWidth(187.5);
-        txt2.getStyleClass().add("MenuItemText");
-        txt2.setMinHeight(25);
-        txt2.setAlignment(Pos.CENTER);
-
-        Label txt3 = new Label("3");
-        txt3.setMinWidth(187.5);
-        txt3.getStyleClass().add("MenuItemText");
-        txt3.setMinHeight(25);
-        txt3.setAlignment(Pos.CENTER);
-
-        Label txt4 = new Label("4");
-        txt4.setMinWidth(187.5);
-        txt4.getStyleClass().add("MenuItemText");
-        txt4.setMinHeight(25);
-        txt4.setAlignment(Pos.CENTER);
 
 
 
 
-
-        Pane pane3 = new Pane();
-    Button btnmenu = new Button("Refresh");
-    btnmenu.setMinHeight(20);
-    btnmenu.setMinWidth(150);
-
-    pane3.getChildren().addAll(btnmenu);
-    pane3.setMinWidth(150);
-    pane3.setMinHeight(20);
-
-    hbox3.setTranslateY(-670);
-    hbox3.setTranslateX(380);
-    hbox3.setMinHeight(50);
-    hbox3.getChildren().addAll(txt1, txt2, txt3, txt4, pane3);
+        HBox hbox3 = new HBox();
+        GridPane teamsTable = new GridPane();
+        teamsTable.setTranslateY(-670);
+        teamsTable.setTranslateX(190);
+        teamsTable.setHgap(0);
+        teamsTable.setVgap(0);
+        teamsTable.setAlignment(Pos.CENTER);
 
 
+        // ✅ Headers
+        String[] headers = {"Teamnaam", "Activiteit"};
+        for (int col2 = 0; col2 < headers.length; col2++) {
+            Label headerLabel = new Label(headers[col2]);
+            headerLabel.setMinWidth(375);
+            headerLabel.setMinHeight(35);
+            headerLabel.getStyleClass().add("MenuItemText");
+            headerLabel.setAlignment(Pos.CENTER);
+            teamsTable.add(headerLabel, col2, 0);
+        }
+
+        // ✅ Haal teams op en voeg ze toe
+        List<DatabaseManager.Team> teams = DatabaseManager.getTeams();
+        int row = 1;
+
+        for (DatabaseManager.Team team : teams) {
+            HBox rowBox = new HBox();
+            rowBox.setSpacing(0);
+            rowBox.setPadding(new Insets(0));
+            rowBox.setAlignment(Pos.CENTER_LEFT);
+            rowBox.setStyle("-fx-background-color: transparent;");
+
+            Label teamNaamLabel = new Label(team.teamNaam);
+            Label activiteitLabel = new Label(team.activiteit.name());
 
 
-        // Top-right HBox with buttons for interacting with team data
-        HBox hbox2 = new HBox();
-        Button btnitem1 = new Button("Team naam");
-        btnitem1.setMinWidth(187.5);
-        btnitem1.setMinHeight(35);
-        Button btnitem2 = new Button("Aantal spelers");
-        btnitem2.setMinWidth(187.5);
-        btnitem2.setMinHeight(35);
-        Button btnitem3 = new Button("Trainer");
-        btnitem3.setMinWidth(187.5);
-        btnitem3.setMinHeight(35);
-        Button btnitem4 = new Button("Activiteit");
-        btnitem4.setMinWidth(187.5);
-        btnitem4.setMinHeight(35);
-        Button btnmenuknop = new Button("Reset");
-        btnmenuknop.setMinHeight(35);
-        btnmenuknop.setMinWidth(150);
+            teamNaamLabel.getStyleClass().add("cell-label2");
+            activiteitLabel.getStyleClass().add("cell-label2");
+
+            rowBox.setOnMouseClicked(event -> {
+                selectedTeam = team;
+                Linkstf1.setText(team.teamNaam);
+                activiteitComboBox.setValue(team.activiteit.name());
+
+                for (Node node : teamsTable.getChildren()) {
+                    if (node instanceof HBox) {
+                        node.setStyle("-fx-background-color: transparent;");
+                    }
+                }
+                rowBox.setStyle("-fx-background-color: #b3d9ff;");
+            });
+
+            Button deleteButton = new Button("Delete");
+            deleteButton.getStyleClass().add("delete-button");
+            deleteButton.setOnAction(event -> {
+                if (DatabaseManager.deleteTeam(team.teamID)) {
+                    System.out.println("Team succesvol verwijderd!");
+                    teamsTable.getChildren().remove(rowBox);
+                } else {
+                    System.out.println("Fout bij verwijderen van team.");
+                }
+            });
+
+            rowBox.getChildren().addAll(teamNaamLabel, activiteitLabel, deleteButton);
+            teamsTable.add(rowBox, 0, row, 3, 1);
+            row++;
+
+            btnlinks5.setMinWidth(250);
+            GridPane.setHalignment(btnlinks5, HPos.CENTER);
+            btnlinks5.setOnAction(e -> {
+                if (DatabaseManager.deleteTeam(team.teamID)) {
+                    System.out.println("Team succesvol verwijderd!");
+                    teamsTable.getChildren().remove(rowBox);
+                } else {
+                    System.out.println("Fout bij verwijderen van team.");
+                }
+            });
+        }
+
+        Button btnmenu = new Button("Refresh");
+        btnmenu.setMinHeight(35);
+        btnmenu.setMinWidth(150);
+        btnmenu.setTranslateY(-825);
+        btnmenu.setTranslateX(1130);
+        btnmenu.setOnAction(event -> {
+
+            teamsTable.getChildren().clear();
+
+            String[] headers2 = {"Teamnaam", "Activiteit"};
+            for (int col2 = 0; col2 < headers2.length; col2++) {
+                Label headerLabel = new Label(headers2[col2]);
+                headerLabel.setMinWidth(375);
+                headerLabel.setMinHeight(35);
+                headerLabel.getStyleClass().add("MenuItemText");
+                headerLabel.setAlignment(Pos.CENTER);
+                teamsTable.add(headerLabel, col2, 0);
+            }
+
+            // ✅ Haal teams op en voeg ze toe
+            List<DatabaseManager.Team> teams2 = DatabaseManager.getTeams();
+            int row2 = 1;
+
+            for (DatabaseManager.Team team : teams2) {
+                HBox rowBox = new HBox();
+                rowBox.setSpacing(0);
+                rowBox.setPadding(new Insets(0));
+                rowBox.setAlignment(Pos.CENTER_LEFT);
+                rowBox.setStyle("-fx-background-color: transparent;");
+
+                Label teamNaamLabel = new Label(team.teamNaam);
+                Label activiteitLabel = new Label(team.activiteit.name());
 
 
 
-        hbox2.setTranslateY(-670);
-        hbox2.setTranslateX(380);
-        hbox2.getChildren().addAll(btnitem1, btnitem2, btnitem3, btnitem4, btnmenuknop);
 
-        // Main VBox layout that contains the full scene structure
+                teamNaamLabel.getStyleClass().add("cell-label2");
+                activiteitLabel.getStyleClass().add("cell-label2");
+
+                rowBox.setOnMouseClicked(event2 -> {
+                    selectedTeam = team;
+                    Linkstf1.setText(team.teamNaam);
+                    activiteitComboBox.setValue(team.activiteit.name());
+
+                    for (Node node : teamsTable.getChildren()) {
+                        if (node instanceof HBox) {
+                            node.setStyle("-fx-background-color: transparent;");
+                        }
+                    }
+                    rowBox.setStyle("-fx-background-color: #b3d9ff;");
+                });
+
+                Button deleteButton = new Button("Delete");
+                deleteButton.getStyleClass().add("delete-button");
+                deleteButton.setOnAction(event2 -> {
+                    if (DatabaseManager.deleteTeam(team.teamID)) {
+                        System.out.println("Team succesvol verwijderd!");
+                        teamsTable.getChildren().remove(rowBox);
+                    } else {
+                        System.out.println("Fout bij verwijderen van team.");
+                    }
+                });
+
+                rowBox.getChildren().addAll(teamNaamLabel, activiteitLabel, deleteButton);
+                teamsTable.add(rowBox, 0, row2, 3, 1);
+                row2++;
+            }
+        });
+
+
+        btnlinks6.setOnAction(event -> {
+            if (selectedTeam != null) {
+                selectedTeam.teamNaam = Linkstf1.getText();
+                selectedTeam.activiteit = DatabaseManager.Activiteit.valueOf(activiteitComboBox.getValue());
+                boolean success = DatabaseManager.updateTeam(selectedTeam);
+                if (success) {
+                    System.out.println("Team succesvol bijgewerkt!");
+                } else {
+                    System.out.println("Fout bij updaten van team.");
+                }
+            }
+        });
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2, hbox2, hbox3);
-
-
-
+        vbox.getChildren().addAll(hbox, pane2, hbox3,teamsTable, btnmenu);
         return vbox;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.eindopdracht.AndereSchermen;
 
 import com.example.eindopdracht.Hoofdschermen.LedenPaginaLeden;
-import com.example.eindopdracht.Hoofdschermen.LedenPaginaTeams;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;

@@ -1,11 +1,15 @@
 package com.example.eindopdracht.Hoofdschermen;
 
+import com.example.eindopdracht.AndereSchermen.DatabaseManager;
 import javafx.application.Application;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -13,7 +17,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.sql.Date;
+import java.util.List;
+
+
 public class VeldenPaginaTrainingen extends Application {
+    private DatabaseManager.Training selectedTraining;
     private Stage stage4;
 
     public VeldenPaginaTrainingen(Stage stage4) {
@@ -86,19 +95,17 @@ public class VeldenPaginaTrainingen extends Application {
         btn4.getStyleClass().add("Knoppen");
 
 
-
-
         TextField Linkstf1 = new TextField("Team:");
         Linkstf1.setTranslateX(10);
         Linkstf1.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
-        TextField Linkstf2 = new TextField("Datum:");
+        TextField Linkstf2 = new TextField("Training:");
         Linkstf2.setTranslateX(10);
         Linkstf2.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
-        TextField Linkstf3 = new TextField("Tijd:");
+        TextField Linkstf3 = new TextField("Datum:");
         Linkstf3.setTranslateX(30);
         Linkstf3.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
@@ -109,7 +116,7 @@ public class VeldenPaginaTrainingen extends Application {
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
         Button btnlinks1 = new Button("Dit training verwijderen");
-        btnlinks1.setTranslateX(65);
+        btnlinks1.setTranslateX(0);
         btnlinks1.setMaxWidth(250);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
@@ -148,8 +155,6 @@ public class VeldenPaginaTrainingen extends Application {
 
         pane.add(btnlinks2, 0, 4);
         GridPane.setColumnSpan(btnlinks2, 2);
-
-
 
 
         btn1.setLayoutX(0);
@@ -219,27 +224,199 @@ public class VeldenPaginaTrainingen extends Application {
         pane2.add(btnlinks11, 0, 4);
         GridPane.setColumnSpan(btnlinks11, 2);
 
-        HBox hbox2 = new HBox();
-        Button btnitem1 = new Button("Team");
-        btnitem1.setMinWidth(180);
-        Button btnitem2 = new Button("Datum");
-        btnitem2.setMinWidth(180);
-        Button btnitem3 = new Button("Tijd");
-        btnitem3.setMinWidth(180);
-        Button btnitem4 = new Button("Veld");
-        btnitem4.setMinWidth(180);
 
 
-        Button btnmenuknop = new Button("Reset");
-        btnmenuknop.setMinWidth(180);
 
-        hbox2.setTranslateY(-670);
-        hbox2.setTranslateX(380);
+        HBox hbox3 = new HBox();
+        GridPane TrainingTable = new GridPane();
+        TrainingTable.setTranslateY(-670);
+        TrainingTable.setTranslateX(285);
+        TrainingTable.setHgap(0);
+        TrainingTable.setVgap(0);
+        TrainingTable.setAlignment(Pos.CENTER);
 
-        hbox2.getChildren().addAll(btnitem1, btnitem2, btnitem3, btnitem4, btnmenuknop);
 
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2,hbox2);
+// ✅ Headers
+        String[] headers = {"TeamID", "TrainingID", "Datum", "Veld"};
+        for (int col2 = 0; col2 < headers.length; col2++) {
+            Label headerLabel = new Label(headers[col2]);
+            headerLabel.setMinWidth(187.5);
+            headerLabel.setMinHeight(35);
+            headerLabel.getStyleClass().add("MenuItemText");
+            headerLabel.setAlignment(Pos.CENTER);
+            TrainingTable.add(headerLabel, col2, 0);
+
+            if (col2 == 3) {
+                headerLabel.setTranslateX(-340);  // Shift the 4th header 50px to the left
+            }
+        }
+
+
+// ✅ Haal trainingen op en voeg ze toe
+        List<DatabaseManager.Training> trainingen = DatabaseManager.getTrainingen();
+        int row = 1;
+
+        for (DatabaseManager.Training training : trainingen) {
+            HBox rowBox = new HBox();
+            rowBox.setSpacing(0);
+            rowBox.setPadding(new Insets(0));
+            rowBox.setAlignment(Pos.CENTER_LEFT);
+            rowBox.setStyle("-fx-background-color: transparent;");
+
+            Label TeamIDLabel = new Label(String.valueOf(training.TeamID));  // Converts int to String
+            Label TrainingIDLabel = new Label(String.valueOf(training.TrainingID));  // Converts int to String
+            Label Datum = new Label(String.valueOf(training.TrainingDatumTijd));  // If Datum is a Date, format it properly
+            Label Veld = new Label(training.Veld);  // Assuming Veld is already a String
+
+
+            TeamIDLabel.getStyleClass().add("cell-label3");
+            TrainingIDLabel.getStyleClass().add("cell-label3");
+            Datum.getStyleClass().add("cell-label3");
+            Veld.getStyleClass().add("cell-label3");
+
+            rowBox.setOnMouseClicked(event -> {
+                selectedTraining = training;
+                Linkstf1.setText(String.valueOf(training.TeamID));  // Changed from 'team.teamNaam' to 'training.TeamNaam'
+                Linkstf2.setText(String.valueOf(training.TrainingID));
+                Linkstf3.setText(String.valueOf(training.TrainingDatumTijd));
+                Linkstf4.setText(training.Veld);// Changed from 'team.activiteit' to 'training.activiteit'
+
+                for (Node node : TrainingTable.getChildren()) {  // Changed from 'teamsTable' to 'TrainingTable'
+                    if (node instanceof HBox) {
+                        node.setStyle("-fx-background-color: transparent;");
+                    }
+                }
+                rowBox.setStyle("-fx-background-color: #b3d9ff;");
+            });
+
+            Button deleteButton = new Button("Delete");
+            deleteButton.getStyleClass().add("delete-button");
+            deleteButton.setOnAction(event -> {
+                if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                    System.out.println("Training succesvol verwijderd!");
+                    TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                } else {
+                    System.out.println("Fout bij verwijderen van training.");
+                }
+            });
+
+            rowBox.getChildren().addAll(TeamIDLabel, TrainingIDLabel, Datum, Veld, deleteButton);
+            TrainingTable.add(rowBox, 0, row, 3, 1);  // Changed from 'teamsTable' to 'TrainingTable'
+            row++;
+
+            btnlinks1.setMinWidth(250);
+            GridPane.setHalignment(btnlinks1, HPos.CENTER);
+            btnlinks1.setOnAction(e -> {
+                if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                    System.out.println("Training succesvol verwijderd!");
+                    TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                } else {
+                    System.out.println("Fout bij verwijderen van training.");
+                }
+            });
+        }
+        btnlinks2.setOnAction(event -> {
+            if (selectedTraining != null) {
+                selectedTraining.TeamID = Integer.parseInt(Linkstf1.getText());
+                selectedTraining.TrainingID = Integer.parseInt(Linkstf2.getText());
+                selectedTraining.TrainingDatumTijd = Linkstf3.getText();
+                selectedTraining.Veld = Linkstf4.getText();
+
+                boolean success = DatabaseManager.updateTraining(selectedTraining);
+                if (success) {
+                    System.out.println("Lid succesvol bijgewerkt!");
+                } else {
+                    System.out.println("Fout bij updaten van Training.");
+                }
+            } else {
+                System.out.println("Geen Training geselecteerd om op te slaan.");
+            }
+        });
+
+        Button btnmenu = new Button("Refresh");
+        btnmenu.setMinHeight(35);
+        btnmenu.setMinWidth(152);
+        btnmenu.setTranslateY(-735);
+        btnmenu.setTranslateX(1130);
+        btnmenu.setOnAction(event -> {
+            TrainingTable.getChildren().clear();
+
+                    String[] headers2 = {"TeamID", "TrainingID", "Datum", "Veld"};
+                    for (int col2 = 0; col2 < headers2.length; col2++) {
+                        Label headerLabel2 = new Label(headers2[col2]);
+                        headerLabel2.setMinWidth(187.5);
+                        headerLabel2.setMinHeight(35);
+                        headerLabel2.getStyleClass().add("MenuItemText");
+                        headerLabel2.setAlignment(Pos.CENTER);
+                        TrainingTable.add(headerLabel2, col2, 0);
+
+
+                        if (col2 == 3) {
+                            headerLabel2.setTranslateX(-340);  // Shift the 4th header 50px to the left
+                        }
+                    }
+
+// ✅ Haal trainingen op en voeg ze toe
+                    List<DatabaseManager.Training> trainingen2 = DatabaseManager.getTrainingen();
+                    int row2 = 1;
+
+                    for (DatabaseManager.Training training : trainingen2) {
+                        HBox rowBox = new HBox();
+                        rowBox.setPadding(new Insets(0));
+                        rowBox.setAlignment(Pos.CENTER_LEFT);
+                        rowBox.setStyle("-fx-background-color: transparent;");
+
+                        Label TeamIDLabel = new Label(String.valueOf(training.TeamID));  // Converts int to String
+                        Label TrainingIDLabel = new Label(String.valueOf(training.TrainingID));  // Converts int to String
+                        Label Datum = new Label(String.valueOf(training.TrainingDatumTijd));  // If Datum is a Date, format it properly
+                        Label Veld = new Label(training.Veld);  // Assuming Veld is already a String
+
+
+
+                        TeamIDLabel.getStyleClass().add("cell-label3");
+                        TrainingIDLabel.getStyleClass().add("cell-label3");
+                        Datum.getStyleClass().add("cell-label3");
+                        Veld.getStyleClass().add("cell-label3");
+
+                        rowBox.setOnMouseClicked(event2 -> {
+                            selectedTraining = training;
+                            Linkstf1.setText(String.valueOf(training.TeamID));  // Changed from 'team.teamNaam' to 'training.TeamNaam'
+                            Linkstf2.setText(String.valueOf(training.TrainingID));
+                            Linkstf3.setText(String.valueOf(training.TrainingDatumTijd));
+                            Linkstf4.setText(training.Veld);// Changed from 'team.activiteit' to 'training.activiteit'
+
+                            for (Node node : TrainingTable.getChildren()) {  // Changed from 'teamsTable' to 'TrainingTable'
+                                if (node instanceof HBox) {
+                                    node.setStyle("-fx-background-color: transparent;");
+                                }
+                            }
+                            rowBox.setStyle("-fx-background-color: #b3d9ff;");
+                        });
+
+                        Button deleteButton = new Button("Delete");
+                        deleteButton.getStyleClass().add("delete-button");
+                        deleteButton.setOnAction(event2 -> {
+                            if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                                System.out.println("Training succesvol verwijderd!");
+                                TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                            } else {
+                                System.out.println("Fout bij verwijderen van training.");
+                            }
+                        });
+
+                        rowBox.getChildren().addAll(TeamIDLabel, TrainingIDLabel, Datum, Veld, deleteButton);
+                        TrainingTable.add(rowBox, 0, row2, 3, 1);  // Changed from 'teamsTable' to 'TrainingTable'
+                        row2++;
+                    }
+
+
+
+
+        });
+                    VBox vbox = new VBox();
+                    vbox.getChildren().addAll(hbox, pane2, TrainingTable, btnmenu);
+
+
 
 
         // Create a scene and set it on the stage
