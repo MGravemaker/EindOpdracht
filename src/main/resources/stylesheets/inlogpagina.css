@@ -1,4 +1,9 @@
 #text1 {
     -fx-font-size: 30px;
+    font-family: Arial;
 
+}
+#inlog {
+    -fx-font-size: 15px;
+    font-family: Arial;
 }

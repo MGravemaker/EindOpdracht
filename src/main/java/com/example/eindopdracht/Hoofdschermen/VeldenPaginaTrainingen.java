@@ -1,6 +1,7 @@
 package com.example.eindopdracht.Hoofdschermen;
 
 import com.example.eindopdracht.AndereSchermen.DatabaseManager;
+import com.example.eindopdracht.AndereSchermen.VeldenPaginaTrainingenToevoegScherm;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -17,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.Date;
 import java.util.List;
 
 
@@ -30,7 +30,6 @@ public class VeldenPaginaTrainingen extends Application {
     }
 
     public VeldenPaginaTrainingen() {
-        // JavaFX will call this constructor when launching the app
     }
 
 
@@ -41,23 +40,17 @@ public class VeldenPaginaTrainingen extends Application {
     public void start(Stage stage) {
 
         this.stage4 = stage;
-        // Create the root node for the scene
         Parent root = getRoot4();
 
-        // Create the scene
         Scene scene = new Scene(root, 1280, 720);
 
-        // Set the scene for the stage (now using the correct 'stage' variable)
         stage.setScene(scene);
         stage.setTitle("LedenPaginaTeams");
 
-        // Add the CSS stylesheet to the scene
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
 
-        // Disable resizing
         stage.setResizable(false);
 
-        // Show the stage
         stage.show();
     }
     public Parent getRoot4() {
@@ -67,14 +60,14 @@ public class VeldenPaginaTrainingen extends Application {
         btn1.getStyleClass().add("Knoppen");
         btn1.setOnAction(e -> {
             LedenPaginaTeams ledenPage2 = new LedenPaginaTeams(stage4);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
             Scene veldenScene = new Scene(ledenPage2.getRoot(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage4.setScene(veldenScene);  // Set the new scene
+            stage4.setScene(veldenScene);
 
-            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
         Button btn2 = new Button("Veldenbeheer");
+        btn2.getStyleClass().add("HuidigKnop");
         btn2.setMinWidth(190);
         btn2.getStyleClass().add("Knoppen");
 
@@ -83,34 +76,38 @@ public class VeldenPaginaTrainingen extends Application {
         btn3.getStyleClass().add("Knoppen");
         btn3.setOnAction(e -> {
             VeldenPaginaWedstrijden veldenPage2 = new VeldenPaginaWedstrijden(stage4);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene veldenScene = new Scene(veldenPage2.getRoot3(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage4.setScene(veldenScene);  // Set the new scene
+            Scene veldenScene = new Scene(veldenPage2.getRoot3(), 1280, 720);
+            stage4.setScene(veldenScene);
 
-            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
         Button btn4 = new Button("Trainingen");
+        btn4.getStyleClass().add("HuidigKnop");
         btn4.setMinWidth(450);
         btn4.getStyleClass().add("Knoppen");
 
 
-        TextField Linkstf1 = new TextField("Team:");
+        TextField Linkstf1 = new TextField();
+        Linkstf1.setPromptText("TeamID:");
         Linkstf1.setTranslateX(10);
         Linkstf1.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
-        TextField Linkstf2 = new TextField("Training:");
+        TextField Linkstf2 = new TextField();
+        Linkstf2.setPromptText("TrainingID");
         Linkstf2.setTranslateX(10);
         Linkstf2.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
-        TextField Linkstf3 = new TextField("Datum:");
+        TextField Linkstf3 = new TextField();
+        Linkstf3.setPromptText("Datum:");
         Linkstf3.setTranslateX(30);
         Linkstf3.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
 
-        TextField Linkstf4 = new TextField("Veld:");
+        TextField Linkstf4 = new TextField("");
+        Linkstf4.setPromptText("Veld:");
         Linkstf4.setTranslateX(10);
         Linkstf4.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, Pos.CENTER.getHpos());
@@ -128,27 +125,22 @@ public class VeldenPaginaTrainingen extends Application {
 
         GridPane pane = new GridPane();
 
-        pane.setVgap(25);
+        pane.setVgap(50);
 
         pane.setId("pane");
         pane.setMinWidth(380);
-        pane.setMinHeight(355);
+        pane.setMinHeight(450);
 
         pane.add(btn1, 0, 0);
         pane.add(btn2, 1, 0);
 
         pane.add(Linkstf1, 0, 1);
-        //  GridPane.setColumnSpan(Linkstf1, 2);
 
         pane.add(Linkstf2, 1, 1);
-        // GridPane.setColumnSpan(btnlinks2, 2);
 
         pane.add(Linkstf3, 0, 2);
-        // GridPane.setColumnSpan(btnlinks3, 2);
 
         pane.add(Linkstf4, 1, 2);
-        // GridPane.setColumnSpan(btnlinks4, 2);
-
 
         pane.add(btnlinks1, 0, 3);
         GridPane.setColumnSpan(btnlinks1, 2);
@@ -164,9 +156,6 @@ public class VeldenPaginaTrainingen extends Application {
         btn2.setLayoutY(0);
 
 
-        //  pane.getChildren().addAll(btn1, btn2);
-
-
         HBox hbox = new HBox();
         hbox.getChildren().addAll(pane, btn3, btn4);
 
@@ -174,33 +163,33 @@ public class VeldenPaginaTrainingen extends Application {
         pane2.setVgap(25);
         pane2.setId("pane2");
         pane2.setMaxWidth(381.5);
-        //  pane2.setPrefWidth(380);
-        pane2.setMinHeight(365);
 
-        Button btnlinks7 = new Button("Schema printen");
-        btnlinks7.setTranslateY(25);
-        btnlinks7.setMinWidth(300);
-        GridPane.setHalignment(btnlinks7, Pos.CENTER.getHpos());
+        pane2.setMinHeight(270);
 
         Button btnlinks8 = new Button("Training toevoegen");
-        btnlinks8.setTranslateY(25);
+        btnlinks8.setId("ToevoegKnop");
+        btnlinks8.setMinWidth(300);
+        btnlinks8.setMinHeight(50);
+        btnlinks8.setTranslateY(100);
         btnlinks8.setMinWidth(300);
         GridPane.setHalignment(btnlinks8, Pos.CENTER.getHpos());
+        btnlinks8.setOnAction(e -> {
+            VeldenPaginaTrainingenToevoegScherm ToevoegScherm = new VeldenPaginaTrainingenToevoegScherm(stage4);
+            Scene ToevoegScene = new Scene(ToevoegScherm.getRoot8(), 800, 600);  // Getting the root from LedenPaginaTeams
+            stage4.setScene(ToevoegScene);
 
-        Button btnlinks9 = new Button("Training verwijderen");
-        btnlinks9.setTranslateY(25);
-        btnlinks9.setMinWidth(300);
-        GridPane.setHalignment(btnlinks9, Pos.CENTER.getHpos());
+            ToevoegScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
+            ToevoegScene.getStylesheets().add(getClass().getResource("/stylesheets/inlogpagina.css").toExternalForm());
+
+        });
+
 
         Button btnlinks10 = new Button("Volledige scherm");
         btnlinks10.setTranslateY(25);
         btnlinks10.setMinWidth(300);
         GridPane.setHalignment(btnlinks10, Pos.CENTER.getHpos());
 
-        Button btnlinks11 = new Button("Opslaan");
-        btnlinks11.setTranslateY(25);
-        btnlinks11.setMinWidth(250);
-        GridPane.setHalignment(btnlinks11, Pos.CENTER.getHpos());
+
 
 
         ColumnConstraints col = new ColumnConstraints();
@@ -209,22 +198,8 @@ public class VeldenPaginaTrainingen extends Application {
         pane2.getColumnConstraints().add(col);
 
 
-        pane2.add(btnlinks10, 0, 0);
-        GridPane.setColumnSpan(btnlinks10, 2);
-
-        pane2.add(btnlinks7, 0, 1);
-        GridPane.setColumnSpan(btnlinks7, 2);
-
-        pane2.add(btnlinks8, 0, 2);
-        GridPane.setColumnSpan(btnlinks8, 2);
-
-        pane2.add(btnlinks9, 0, 3);
-        GridPane.setColumnSpan(btnlinks9, 2);
-
-        pane2.add(btnlinks11, 0, 4);
-        GridPane.setColumnSpan(btnlinks11, 2);
-
-
+        pane2.add(btnlinks8, 0, 0);
+        GridPane.setColumnSpan(btnlinks10, 8);
 
 
         HBox hbox3 = new HBox();
@@ -247,12 +222,12 @@ public class VeldenPaginaTrainingen extends Application {
             TrainingTable.add(headerLabel, col2, 0);
 
             if (col2 == 3) {
-                headerLabel.setTranslateX(-340);  // Shift the 4th header 50px to the left
+                headerLabel.setTranslateX(-340);
             }
         }
 
 
-// ✅ Haal trainingen op en voeg ze toe
+//  Haal trainingen op en voeg ze toe
         List<DatabaseManager.Training> trainingen = DatabaseManager.getTrainingen();
         int row = 1;
 
@@ -276,12 +251,12 @@ public class VeldenPaginaTrainingen extends Application {
 
             rowBox.setOnMouseClicked(event -> {
                 selectedTraining = training;
-                Linkstf1.setText(String.valueOf(training.TeamID));  // Changed from 'team.teamNaam' to 'training.TeamNaam'
+                Linkstf1.setText(String.valueOf(training.TeamID));
                 Linkstf2.setText(String.valueOf(training.TrainingID));
                 Linkstf3.setText(String.valueOf(training.TrainingDatumTijd));
-                Linkstf4.setText(training.Veld);// Changed from 'team.activiteit' to 'training.activiteit'
+                Linkstf4.setText(training.Veld);
 
-                for (Node node : TrainingTable.getChildren()) {  // Changed from 'teamsTable' to 'TrainingTable'
+                for (Node node : TrainingTable.getChildren()) {
                     if (node instanceof HBox) {
                         node.setStyle("-fx-background-color: transparent;");
                     }
@@ -292,24 +267,24 @@ public class VeldenPaginaTrainingen extends Application {
             Button deleteButton = new Button("Delete");
             deleteButton.getStyleClass().add("delete-button");
             deleteButton.setOnAction(event -> {
-                if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                if (DatabaseManager.deleteTraining(training.TrainingID)) {
                     System.out.println("Training succesvol verwijderd!");
-                    TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                    TrainingTable.getChildren().remove(rowBox);
                 } else {
                     System.out.println("Fout bij verwijderen van training.");
                 }
             });
 
             rowBox.getChildren().addAll(TeamIDLabel, TrainingIDLabel, Datum, Veld, deleteButton);
-            TrainingTable.add(rowBox, 0, row, 3, 1);  // Changed from 'teamsTable' to 'TrainingTable'
+            TrainingTable.add(rowBox, 0, row, 3, 1);
             row++;
 
             btnlinks1.setMinWidth(250);
             GridPane.setHalignment(btnlinks1, HPos.CENTER);
             btnlinks1.setOnAction(e -> {
-                if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                if (DatabaseManager.deleteTraining(training.TrainingID)) {
                     System.out.println("Training succesvol verwijderd!");
-                    TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                    TrainingTable.getChildren().remove(rowBox);
                 } else {
                     System.out.println("Fout bij verwijderen van training.");
                 }
@@ -352,11 +327,11 @@ public class VeldenPaginaTrainingen extends Application {
 
 
                         if (col2 == 3) {
-                            headerLabel2.setTranslateX(-340);  // Shift the 4th header 50px to the left
+                            headerLabel2.setTranslateX(-340);
                         }
                     }
 
-// ✅ Haal trainingen op en voeg ze toe
+//  Haal trainingen op en voeg ze toe
                     List<DatabaseManager.Training> trainingen2 = DatabaseManager.getTrainingen();
                     int row2 = 1;
 
@@ -366,11 +341,10 @@ public class VeldenPaginaTrainingen extends Application {
                         rowBox.setAlignment(Pos.CENTER_LEFT);
                         rowBox.setStyle("-fx-background-color: transparent;");
 
-                        Label TeamIDLabel = new Label(String.valueOf(training.TeamID));  // Converts int to String
-                        Label TrainingIDLabel = new Label(String.valueOf(training.TrainingID));  // Converts int to String
-                        Label Datum = new Label(String.valueOf(training.TrainingDatumTijd));  // If Datum is a Date, format it properly
-                        Label Veld = new Label(training.Veld);  // Assuming Veld is already a String
-
+                        Label TeamIDLabel = new Label(String.valueOf(training.TeamID));
+                        Label TrainingIDLabel = new Label(String.valueOf(training.TrainingID));
+                        Label Datum = new Label(String.valueOf(training.TrainingDatumTijd));
+                        Label Veld = new Label(training.Veld);
 
 
                         TeamIDLabel.getStyleClass().add("cell-label3");
@@ -380,12 +354,12 @@ public class VeldenPaginaTrainingen extends Application {
 
                         rowBox.setOnMouseClicked(event2 -> {
                             selectedTraining = training;
-                            Linkstf1.setText(String.valueOf(training.TeamID));  // Changed from 'team.teamNaam' to 'training.TeamNaam'
+                            Linkstf1.setText(String.valueOf(training.TeamID));
                             Linkstf2.setText(String.valueOf(training.TrainingID));
                             Linkstf3.setText(String.valueOf(training.TrainingDatumTijd));
-                            Linkstf4.setText(training.Veld);// Changed from 'team.activiteit' to 'training.activiteit'
+                            Linkstf4.setText(training.Veld);
 
-                            for (Node node : TrainingTable.getChildren()) {  // Changed from 'teamsTable' to 'TrainingTable'
+                            for (Node node : TrainingTable.getChildren()) {
                                 if (node instanceof HBox) {
                                     node.setStyle("-fx-background-color: transparent;");
                                 }
@@ -396,20 +370,18 @@ public class VeldenPaginaTrainingen extends Application {
                         Button deleteButton = new Button("Delete");
                         deleteButton.getStyleClass().add("delete-button");
                         deleteButton.setOnAction(event2 -> {
-                            if (DatabaseManager.deleteTraining(training.TrainingID)) {  // Changed from 'DatabaseManager.deleteTeam' to 'DatabaseManager.deleteTraining'
+                            if (DatabaseManager.deleteTraining(training.TrainingID)) {
                                 System.out.println("Training succesvol verwijderd!");
-                                TrainingTable.getChildren().remove(rowBox);  // Changed from 'teamsTable' to 'TrainingTable'
+                                TrainingTable.getChildren().remove(rowBox);
                             } else {
                                 System.out.println("Fout bij verwijderen van training.");
                             }
                         });
 
                         rowBox.getChildren().addAll(TeamIDLabel, TrainingIDLabel, Datum, Veld, deleteButton);
-                        TrainingTable.add(rowBox, 0, row2, 3, 1);  // Changed from 'teamsTable' to 'TrainingTable'
+                        TrainingTable.add(rowBox, 0, row2, 3, 1);
                         row2++;
                     }
-
-
 
 
         });
@@ -417,9 +389,6 @@ public class VeldenPaginaTrainingen extends Application {
                     vbox.getChildren().addAll(hbox, pane2, TrainingTable, btnmenu);
 
 
-
-
-        // Create a scene and set it on the stage
         return vbox;
 
     }

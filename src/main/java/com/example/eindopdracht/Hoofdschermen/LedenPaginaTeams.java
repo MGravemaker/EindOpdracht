@@ -1,6 +1,7 @@
 package com.example.eindopdracht.Hoofdschermen;
 
 import com.example.eindopdracht.AndereSchermen.DatabaseManager;
+import com.example.eindopdracht.AndereSchermen.LedenPaginaTeamsToevoegScherm;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,8 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class LedenPaginaTeams extends Application {
     }
 
     public LedenPaginaTeams() {
-        // JavaFX will call this constructor when launching the app
+
     }
 
     @Override
@@ -42,54 +41,49 @@ public class LedenPaginaTeams extends Application {
 
         this.stage = stage;
 
-        // Create the root node for the scene
         Parent root = getRoot();
 
-        // Create the scene
+
         Scene scene = new Scene(root, 1280, 720);
 
-        // Set the scene for the stage (now using the correct 'stage' variable)
         stage.setScene(scene);
         stage.setTitle("LedenPaginaTeams");
 
-        // Add the CSS stylesheet to the scene
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
 
-        // Disable resizing
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
+
         stage.setResizable(false);
 
-        // Show the stage
         stage.show();
     }
 
     public Parent getRoot() {
-        // Create buttons for the HBox
+
         Button btn1 = new Button("Ledenbeheer");
         btn1.setMinWidth(190);
         btn1.getStyleClass().add("Knoppen");
+        btn1.getStyleClass().add("HuidigKnop");
         btn1.setOnAction(e -> {
             LedenPaginaTeams ledenPage2 = new LedenPaginaTeams(stage);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene veldenScene = new Scene(ledenPage2.getRoot(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage.setScene(veldenScene);  // Set the new scene
+            Scene veldenScene = new Scene(ledenPage2.getRoot(), 1280, 720);
+            stage.setScene(veldenScene);
 
-            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
-
 
         Button btn2 = new Button("Veldenbeheer");
         btn2.setMinWidth(190);
         btn2.getStyleClass().add("Knoppen");
         btn2.setOnAction(e -> {
             VeldenPaginaWedstrijden veldenPage = new VeldenPaginaWedstrijden(stage);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
             Scene veldenScene = new Scene(veldenPage.getRoot3(), 1280, 720);  // Getting the root from LedenPaginaTeams
             stage.setScene(veldenScene);  // Set the new scene
 
-            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            veldenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
         Button btn3 = new Button("Teams");
+        btn3.getStyleClass().add("HuidigKnop");
         btn3.setMinWidth(450);
         btn3.getStyleClass().add("Knoppen");
         btn3.setTranslateY(-190);
@@ -100,15 +94,14 @@ public class LedenPaginaTeams extends Application {
         btn4.setTranslateY(-190);
         btn4.setOnAction(e -> {
             LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage.setScene(ledenScene);  // Set the new scene
+            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);
+            stage.setScene(ledenScene);
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
-        // Left side TextField and Buttons
-        TextField Linkstf1 = new TextField("Team naam:");
+        TextField Linkstf1 = new TextField();
+        Linkstf1.setPromptText("Team naam:");
         Linkstf1.setTranslateX(10);
         Linkstf1.setMaxWidth(150);
         GridPane.setHalignment(Linkstf1, HPos.CENTER);
@@ -116,12 +109,12 @@ public class LedenPaginaTeams extends Application {
         ListView<String> spelersListView = new ListView<>();
         spelersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multiple selection
 
-        // Get player names from database and populate ListView
+
         List<String> spelers = DatabaseManager.getLidnamen();
         ObservableList<String> observableSpelers = FXCollections.observableArrayList(spelers);
         spelersListView.setItems(observableSpelers);
 
-        // Set max size
+
         spelersListView.setMaxHeight(100);
         spelersListView.setMaxWidth(250);
         GridPane.setHalignment(spelersListView, HPos.CENTER);
@@ -144,7 +137,7 @@ public class LedenPaginaTeams extends Application {
         GridPane.setHalignment(btnlinks6, HPos.CENTER);
         btnlinks6.setOnAction(e -> {});
 
-        // Left panel GridPane Layout
+
         GridPane pane = new GridPane();
         pane.setVgap(20);
         pane.setId("pane");
@@ -164,14 +157,11 @@ public class LedenPaginaTeams extends Application {
         pane.add(btnlinks6, 0, 5);
         GridPane.setColumnSpan(btnlinks6, 2);
 
-
-        // HBox to hold the left pane and btn3, btn4
-        HBox hbox = new HBox();  // Add spacing between elements
-        hbox.setAlignment(Pos.CENTER);  // Center alignment for buttons and grid
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER);
         hbox.getChildren().addAll(pane, btn3, btn4);
 
 
-        // Right panel GridPane Layout
         GridPane pane2 = new GridPane();
         pane2.setVgap(25);
         pane2.setId("pane2");
@@ -179,44 +169,30 @@ public class LedenPaginaTeams extends Application {
         pane2.setMinHeight(290);
 
         Button btnlinks8 = new Button("Team toevoegen");
-        btnlinks8.setTranslateY(25);
+        btnlinks8.setId("ToevoegKnop");
+        btnlinks8.setTranslateY(110);
         btnlinks8.setMinWidth(300);
+        btnlinks8.setMinHeight(50);
         GridPane.setHalignment(btnlinks8, HPos.CENTER);
+        btnlinks8.setOnAction(e -> {
+            LedenPaginaTeamsToevoegScherm ToevoegScherm = new LedenPaginaTeamsToevoegScherm(stage);
 
-        Button btnlinks9 = new Button("Team(s) verwijderen");
-        btnlinks9.setTranslateY(25);
-        btnlinks9.setMinWidth(300);
-        GridPane.setHalignment(btnlinks9, HPos.CENTER);
+            Scene ToevoegScene = new Scene(ToevoegScherm.getRoot5(), 800, 600);
+            stage.setScene(ToevoegScene);
 
-        Button btnlinks10 = new Button("Volledige scherm");
-        btnlinks10.setTranslateY(25);
-        btnlinks10.setMinWidth(300);
-        GridPane.setHalignment(btnlinks10, HPos.CENTER);
+            ToevoegScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
+            ToevoegScene.getStylesheets().add(getClass().getResource("/stylesheets/inlogpagina.css").toExternalForm());
 
-        Button btnlinks11 = new Button("Opslaan");
-        btnlinks11.setTranslateY(25);
-        btnlinks11.setMinWidth(250);
-        GridPane.setHalignment(btnlinks11, HPos.CENTER);
+        });
 
-        // Column Constraints for the right GridPane
+
         ColumnConstraints col = new ColumnConstraints();
         col.setHalignment(HPos.CENTER);
         col.setPrefWidth(380);
         pane2.getColumnConstraints().add(col);
 
-        // Add buttons to the right panel GridPane
-        pane2.add(btnlinks10, 0, 0);
-        GridPane.setColumnSpan(btnlinks10, 2);
-        pane2.add(btnlinks8, 0, 1);
+        pane2.add(btnlinks8, 0, 0);
         GridPane.setColumnSpan(btnlinks8, 2);
-        pane2.add(btnlinks9, 0, 2);
-        GridPane.setColumnSpan(btnlinks9, 2);
-        pane2.add(btnlinks11, 0, 3);
-        GridPane.setColumnSpan(btnlinks11, 2);
-
-
-
-
 
         HBox hbox3 = new HBox();
         GridPane teamsTable = new GridPane();
@@ -227,7 +203,7 @@ public class LedenPaginaTeams extends Application {
         teamsTable.setAlignment(Pos.CENTER);
 
 
-        // ✅ Headers
+        //  Headers
         String[] headers = {"Teamnaam", "Activiteit"};
         for (int col2 = 0; col2 < headers.length; col2++) {
             Label headerLabel = new Label(headers[col2]);
@@ -238,7 +214,7 @@ public class LedenPaginaTeams extends Application {
             teamsTable.add(headerLabel, col2, 0);
         }
 
-        // ✅ Haal teams op en voeg ze toe
+        // Haal teams op en voeg ze toe
         List<DatabaseManager.Team> teams = DatabaseManager.getTeams();
         int row = 1;
 
@@ -299,7 +275,7 @@ public class LedenPaginaTeams extends Application {
         Button btnmenu = new Button("Refresh");
         btnmenu.setMinHeight(35);
         btnmenu.setMinWidth(150);
-        btnmenu.setTranslateY(-825);
+        btnmenu.setTranslateY(-795);
         btnmenu.setTranslateX(1130);
         btnmenu.setOnAction(event -> {
 
@@ -315,7 +291,7 @@ public class LedenPaginaTeams extends Application {
                 teamsTable.add(headerLabel, col2, 0);
             }
 
-            // ✅ Haal teams op en voeg ze toe
+            //  Haal teams op en voeg ze toe
             List<DatabaseManager.Team> teams2 = DatabaseManager.getTeams();
             int row2 = 1;
 
@@ -328,8 +304,6 @@ public class LedenPaginaTeams extends Application {
 
                 Label teamNaamLabel = new Label(team.teamNaam);
                 Label activiteitLabel = new Label(team.activiteit.name());
-
-
 
 
                 teamNaamLabel.getStyleClass().add("cell-label2");

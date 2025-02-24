@@ -29,52 +29,53 @@ public class LedenPaginaLedenToevoegScherm extends Application {
     }
 
     public LedenPaginaLedenToevoegScherm() {
-        // JavaFX will call this constructor when launching the app
+
     }
 
     @Override
     public void start(Stage stage) {
 
         this.stage6 = stage;
-        // Create the root node for the scene
+
         Parent root = getRoot6();
 
-        // Create the scene
+
         Scene scene = new Scene(root, 800, 600);
 
-        // Set the scene for the stage (now using the correct 'stage' variable)
+
         stage.setScene(scene);
         stage.setTitle("LedenPaginaTeamsToevoegScherm");
 
-        // Add the CSS stylesheet to the scene
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/stylesheets/inlogpagina.css").toExternalForm());
 
-        // Disable resizing
+
         stage.setResizable(false);
 
-        // Show the stage
+
         stage.show();
 
 
     }
     public Parent getRoot6() {
-        StackPane root = new StackPane(); // StackPane to keep everything centered
-        VBox vbox = new VBox(25); // VBox to organize elements vertically with spacing
-        vbox.setAlignment(Pos.CENTER); // Center the VBox itself
+        StackPane root = new StackPane();
+        VBox vbox = new VBox(25);
+        vbox.setAlignment(Pos.CENTER);
 
         Button btnterug = new Button();
+        btnterug.setText("⬅");
+        btnterug.setId("TerugKnop");
         btnterug.setMinWidth(50);
         btnterug.setMinHeight(50);
-        btnterug.setTranslateY(-70);
+        btnterug.setTranslateY(-50);
         btnterug.setTranslateX(-350);
         btnterug.setOnAction(e -> {
             LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage6);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
-            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage6.setScene(ledenScene);  // Set the new scene
+            Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);
+            stage6.setScene(ledenScene);
 
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
         // UI Elements
@@ -117,7 +118,6 @@ public class LedenPaginaLedenToevoegScherm extends Application {
         TeamNaam.setMinHeight(50);
         GridPane.setHalignment(TeamNaam, HPos.CENTER);
 
-
         List<String> teams = DatabaseManager.getTeamNames();
 
         TeamNaam.getItems().add("Geen team");
@@ -128,7 +128,6 @@ public class LedenPaginaLedenToevoegScherm extends Application {
         } else {
             TeamNaam.setPromptText("Geen teams gevonden");
         }
-
 
         TeamNaam.setOnAction(event -> {
             if ("Geen team".equals(TeamNaam.getValue())) {
@@ -158,18 +157,17 @@ public class LedenPaginaLedenToevoegScherm extends Application {
                 String team = TeamNaam.getValue();
                 String rol = tf8.getText();
 
-                // Insert into database
+
                 boolean success = DatabaseManager.insertLid(voornaam, achternaam, email, telefoonnummer, geboortedatum, geslacht, team, rol);
 
                 if (success) {
                     System.out.println("Lid succesvol toegevoegd!");
 
                     LedenPaginaLeden ledenPage = new LedenPaginaLeden(stage6);
-                    // Instead of directly setting the scene, use the getRoot() to get the layout
-                    Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);  // Getting the root from LedenPaginaTeams
-                    stage6.setScene(ledenScene);  // Set the new scene
+                    Scene ledenScene = new Scene(ledenPage.getRoot2(), 1280, 720);
+                    stage6.setScene(ledenScene);
 
-                    ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                    ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
                 } else {
                     System.out.println("Fout bij toevoegen lid!");
                 }
@@ -182,9 +180,7 @@ public class LedenPaginaLedenToevoegScherm extends Application {
             pane.setVgap(25);
             pane.setHgap(25);
             pane.setId("pane1");
-            // pane.setMaxWidth(381.5);
-            //  pane2.setPrefWidth(380);
-            //
+
             pane.add(tf1, 0, 0);
             pane.add(tf2, 1, 0);
             pane.add(tf3, 0, 1);
@@ -193,17 +189,11 @@ public class LedenPaginaLedenToevoegScherm extends Application {
             pane.add(tf6, 1, 2);
             pane.add(TeamNaam, 0, 3);
             pane.add(tf8, 1, 3);
-
-
-            // Add elements to VBox
-            // vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
-            //vbox.getChildren().addAll(btnterug, text, gebruikersnaam,btn1,btn2,btn3, btnopslaan);
+;
             vbox.getChildren().addAll(btnterug, text, pane, btnopslaan);
 
-            // Add VBox to StackPane
             root.getChildren().add(vbox);
 
-            // Create scene  and set stage
             return root;
 
 

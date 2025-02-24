@@ -47,7 +47,7 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
         stage.setTitle("LedenPaginaTeamsToevoegScherm");
 
         // Add the CSS stylesheet to the scene
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/stylesheets/inlogpagina.css").toExternalForm());
 
         // Disable resizing
@@ -59,33 +59,32 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
 
     }
     public Parent getRoot5() {
-        StackPane root = new StackPane(); // StackPane to keep everything centered
-        VBox vbox = new VBox(25); // VBox to organize elements vertically with spacing
-        vbox.setAlignment(Pos.CENTER); // Center the VBox itself
+        StackPane root = new StackPane();
+        VBox vbox = new VBox(25);
+        vbox.setAlignment(Pos.CENTER);
 
         Button btnterug = new Button();
+        btnterug.setText("⬅");
+        btnterug.setId("TerugKnop");
         btnterug.setMinWidth(50);
         btnterug.setMinHeight(50);
-        btnterug.setTranslateY(-50);
+        btnterug.setTranslateY(50);
+
         btnterug.setTranslateX(-350);
         btnterug.setOnAction(e -> {
             LedenPaginaTeams ledenPage = new LedenPaginaTeams(stage5);
-            // Instead of directly setting the scene, use the getRoot() to get the layout
             Scene ledenScene = new Scene(ledenPage.getRoot(), 1280, 720);  // Getting the root from LedenPaginaTeams
-            stage5.setScene(ledenScene);  // Set the new scene
-
-            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+            stage5.setScene(ledenScene);
+            ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
         });
 
 
-
-        // UI Elements
         Text text = new Text("Team Toevoegen");
         text.setId("text1");
-        text.setTranslateY(-50);
+        text.setTranslateY(-15);
 
         TextField tf1 = new TextField();
-        tf1.setPromptText("Teamnaam:"); // Placeholder text
+        tf1.setPromptText("Teamnaam:");
         tf1.setId("gebruikersnaam");
         tf1.setMaxWidth(600);
         tf1.setMaxHeight(300);
@@ -94,18 +93,16 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
         ListView<String> spelersListView = new ListView<>();
         spelersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multiple selection
 
-        // Get player names from database and populate ListView
         List<String> spelers = DatabaseManager.getLidnamen();
         ObservableList<String> observableSpelers = FXCollections.observableArrayList(spelers);
         spelersListView.setItems(observableSpelers);
 
-        // Set max size
         spelersListView.setMaxHeight(300);
         spelersListView.setMaxWidth(600);
 
 
         ComboBox<String> trainerComboBox = new ComboBox<>();
-        trainerComboBox.getItems().add("Geen trainer"); // Default option
+        trainerComboBox.getItems().add("Geen trainer");
 
         List<String> trainerNames = DatabaseManager.getTrainerNames();
         trainerComboBox.getItems().addAll(trainerNames);
@@ -122,8 +119,6 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
         GridPane.setHalignment(activiteitComboBox, HPos.CENTER);
 
 
-
-
         Button btnopslaan = new Button("Opslaan");;
         GridPane.setHalignment(btnopslaan, Pos.CENTER.getHpos());
         btnopslaan.setMaxWidth(600);
@@ -133,45 +128,30 @@ public class LedenPaginaTeamsToevoegScherm extends Application {
             String teamNaam = tf1.getText();
             String activiteit = activiteitComboBox.getValue();
 
-            // Get selected trainer
             String selectedTrainer = trainerComboBox.getValue();
 
-            // Convert trainer name to LidID
             Integer trainerLidId = selectedTrainer.equals("Geen trainer") ? null : DatabaseManager.getLidIdByName(selectedTrainer);
 
-            // Insert into database
             boolean success = DatabaseManager.insertTeam(teamNaam, activiteit, trainerLidId);
 
             if (success) {
                 System.out.println("Team succesvol toegevoegd!");
 
-                // Reload the page or navigate back to the team overzicht
                 LedenPaginaTeams teamsPage = new LedenPaginaTeams(stage5);
                 Scene teamsScene = new Scene(teamsPage.getRoot(), 1280, 720);
                 stage5.setScene(teamsScene);
-                teamsScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                teamsScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
             } else {
                 System.out.println("Fout bij toevoegen team!");
             }
         });
 
-
-
-
-
-
-
-        // Add elements to VBox
-       // vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
         vbox.getChildren().addAll(btnterug, text, tf1,spelersListView ,trainerComboBox,activiteitComboBox, btnopslaan);
+        vbox.setTranslateY(-35);
 
-        // Add VBox to StackPane
         root.getChildren().add(vbox);
 
-        // Create scene and set stage
         return root;
-
-
 
     }
 }

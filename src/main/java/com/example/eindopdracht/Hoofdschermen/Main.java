@@ -21,39 +21,45 @@ public class  Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane root = new StackPane(); // StackPane to keep everything centered
+        StackPane root = new StackPane();
 
-        VBox vbox = new VBox(10); // VBox to organize elements vertically with spacing
-        vbox.setAlignment(Pos.CENTER); // Center the VBox itself
+        VBox vbox = new VBox(40);
+        vbox.setAlignment(Pos.CENTER);
 
         // UI Elements
         Text text = new Text("MOC 17 Gegevens beheer systeem");
         text.setId("text1");
-        text.setTranslateY(-175);
+        text.setTranslateY(-50);
 
         TextField gebruikersnaam = new TextField();
         gebruikersnaam.setPromptText("Gebruikersnaam"); // Placeholder text
         gebruikersnaam.setId("gebruikersnaam");
         gebruikersnaam.setMaxWidth(500);
+        gebruikersnaam.setMinHeight(50);
 
         PasswordField wachtwoord = new PasswordField();
         wachtwoord.setPromptText("Wachtwoord");
         wachtwoord.setId("wachtwoord");
         wachtwoord.setMaxWidth(500);
+        wachtwoord.setMinHeight(50);
 
-        Button inlog = new Button("Inlog");
+        Button inlog = new Button("Inloggen");
+        inlog.setId("inlog");
+        inlog.setMaxWidth(200);
+        inlog.setMinHeight(50);
+        inlog.setTranslateY(20);
+
         inlog.setOnAction(e -> {
             String inputGebruikersnaam = gebruikersnaam.getText();
             String inputWachtwoord = wachtwoord.getText();
 
             if (DatabaseManager.authenticateUser(inputGebruikersnaam, inputWachtwoord)) {
-                // If authentication is successful, go to the next scene
                 LedenPaginaTeams ledenPage = new LedenPaginaTeams(primaryStage);
                 Scene ledenScene = new Scene(ledenPage.getRoot(), 1280, 720);
                 primaryStage.setScene(ledenScene);
-                ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+                ledenScene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
             } else {
-                // Show error if login fails
+
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Login Mislukt");
                 alert.setHeaderText("Ongeldige gebruikersnaam of wachtwoord");
@@ -62,19 +68,16 @@ public class  Main extends Application {
             }
         });
 
-        // Add elements to VBox
         vbox.getChildren().addAll(text, gebruikersnaam, wachtwoord, inlog);
 
-        // Add VBox to StackPane
         root.getChildren().add(vbox);
 
-        // Create scene and set stage
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Eindopdracht");
         primaryStage.show();
 
         scene.getStylesheets().add(getClass().getResource("/stylesheets/inlogpagina.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/LedenTeams.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/algemeen.css").toExternalForm());
     }
 }
