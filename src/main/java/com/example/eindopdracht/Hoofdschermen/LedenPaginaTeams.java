@@ -347,14 +347,63 @@ public class LedenPaginaTeams extends Application {
                 boolean success = DatabaseManager.updateTeam(selectedTeam);
                 if (success) {
                     System.out.println("Team succesvol bijgewerkt!");
+
+                    // Refresh de teamsTable
+                    teamsTable.getChildren().clear();
+
+                    String[] headers2 = {"Teamnaam", "Activiteit"};
+                    for (int col2 = 0; col2 < headers2.length; col2++) {
+                        Label headerLabel = new Label(headers2[col2]);
+                        headerLabel.setMinWidth(375);
+                        headerLabel.setMinHeight(35);
+                        headerLabel.getStyleClass().add("MenuItemText");
+                        headerLabel.setAlignment(Pos.CENTER);
+                        teamsTable.add(headerLabel, col2, 0);
+                    }
+
+                    List<DatabaseManager.Team> teams2 = DatabaseManager.getTeams();
+                    int row2 = 1;
+
+                    for (DatabaseManager.Team team : teams2) {
+                        HBox rowBox = new HBox();
+                        rowBox.setSpacing(0);
+                        rowBox.setPadding(new Insets(0));
+                        rowBox.setAlignment(Pos.CENTER_LEFT);
+                        rowBox.setStyle("-fx-background-color: transparent;");
+
+                        Label teamNaamLabel = new Label(team.teamNaam);
+                        Label activiteitLabel = new Label(team.activiteit.name());
+
+                        teamNaamLabel.getStyleClass().add("cell-label2");
+                        activiteitLabel.getStyleClass().add("cell-label2");
+
+                        rowBox.setOnMouseClicked(event2 -> {
+                            selectedTeam = team;
+                            Linkstf1.setText(team.teamNaam);
+                            activiteitComboBox.setValue(team.activiteit.name());
+
+                            for (Node node : teamsTable.getChildren()) {
+                                if (node instanceof HBox) {
+                                    node.setStyle("-fx-background-color: transparent;");
+                                }
+                            }
+                            rowBox.setStyle("-fx-background-color: #b3d9ff;");
+                        });
+
+                        teamsTable.add(rowBox, 0, row2, 2, 1);
+                        row2++;
+                    }
                 } else {
                     System.out.println("Fout bij updaten van team.");
                 }
+            } else {
+                System.out.println("Geen team geselecteerd om op te slaan.");
             }
         });
 
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2, hbox3,teamsTable, btnmenu);
+        vbox.getChildren().addAll(hbox, pane2, hbox3,teamsTable);
         return vbox;
     }
 }

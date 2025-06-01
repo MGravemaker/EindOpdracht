@@ -465,30 +465,103 @@ public class LedenPaginaLeden extends Application {
 
 
         btnlinks2.setOnAction(event -> {
-            if (selectedLid != null) {
-                selectedLid.voornaam = Linkstf1.getText();
-                selectedLid.achternaam = Linkstf2.getText();
-                selectedLid.email = Linkstf3.getText();
-                selectedLid.telefoonnummer = Linkstf4.getText();
-                selectedLid.geboortedatum = Linkstf5.getText();
-                selectedLid.geslacht = Linkstf6.getText();
-                selectedLid.TeamID = Linkstf7.getText();
-                selectedLid.rol = Linkstf8.getText();
 
-                boolean success = DatabaseManager.updateLid(selectedLid);
-                if (success) {
-                    System.out.println("Lid succesvol bijgewerkt!");
+                if (selectedLid != null) {
+                    selectedLid.voornaam = Linkstf1.getText();
+                    selectedLid.achternaam = Linkstf2.getText();
+                    selectedLid.email = Linkstf3.getText();
+                    selectedLid.telefoonnummer = Linkstf4.getText();
+                    selectedLid.geboortedatum = Linkstf5.getText();
+                    selectedLid.geslacht = Linkstf6.getText();
+                    selectedLid.TeamID = Linkstf7.getText();
+                    selectedLid.rol = Linkstf8.getText();
+
+                    boolean success = DatabaseManager.updateLid(selectedLid);
+                    if (success) {
+                        System.out.println("Lid succesvol bijgewerkt!");
+
+                        // Refresh de tabel
+                        ledenTable.getChildren().clear();
+
+                        String[] columnHeaders = {"Voornaam", "Achternaam", "Teamnaam", "Rol", "Geboortedatum"};
+                        for (int col2 = 0; col2 < columnHeaders.length; col2++) {
+                            Label columnHeaderLabel = new Label(columnHeaders[col2]);
+                            columnHeaderLabel.setMinWidth(150);
+                            columnHeaderLabel.setMinHeight(35);
+                            columnHeaderLabel.getStyleClass().add("MenuItemText");
+                            columnHeaderLabel.setAlignment(Pos.CENTER);
+                            ledenTable.add(columnHeaderLabel, col2, 0);
+                        }
+
+                        List<DatabaseManager.Lid> teamMembers = DatabaseManager.getLeden();
+                        int rowIndex = 1;
+
+                        for (DatabaseManager.Lid member : teamMembers) {
+                            HBox rowContainer = new HBox();
+                            rowContainer.setSpacing(0);
+                            rowContainer.setPadding(new Insets(0));
+                            rowContainer.setAlignment(Pos.CENTER_LEFT);
+                            rowContainer.setStyle("-fx-background-color: transparent;");
+
+                            Label firstNameLabel = new Label(member.voornaam);
+                            Label lastNameLabel = new Label(member.achternaam);
+                            Label teamLabel = new Label(member.TeamID);
+                            Label roleLabel = new Label(member.rol);
+                            Label birthDateLabel = new Label(member.geboortedatum);
+
+                            firstNameLabel.getStyleClass().add("cell-label");
+                            lastNameLabel.getStyleClass().add("cell-label");
+                            teamLabel.getStyleClass().add("cell-label");
+                            roleLabel.getStyleClass().add("cell-label");
+                            birthDateLabel.getStyleClass().add("cell-label");
+
+                            rowContainer.setOnMouseClicked(event2 -> {
+                                selectedLid = member;
+
+                                Linkstf1.setText(member.voornaam);
+                                Linkstf2.setText(member.achternaam);
+                                Linkstf3.setText(member.email);
+                                Linkstf4.setText(member.telefoonnummer);
+                                Linkstf5.setText(member.geboortedatum);
+                                Linkstf6.setText(member.geslacht);
+                                Linkstf7.setText(member.TeamID);
+                                Linkstf8.setText(member.rol);
+
+                                for (Node node : ledenTable.getChildren()) {
+                                    if (node instanceof HBox) {
+                                        node.setStyle("-fx-background-color: transparent;");
+                                    }
+                                }
+                                rowContainer.setStyle("-fx-background-color: #b3d9ff;");
+                            });
+
+                            Button deleteButton = new Button("Delete");
+                            deleteButton.getStyleClass().add("delete-button");
+                            deleteButton.setOnAction(event2 -> {
+                                if (DatabaseManager.deleteLid(member.LidID)) {
+                                    System.out.println("Lid succesvol verwijderd!");
+                                    ledenTable.getChildren().remove(rowContainer);
+                                } else {
+                                    System.out.println("Fout bij verwijderen van lid.");
+                                }
+                            });
+
+                            rowContainer.getChildren().addAll(firstNameLabel, lastNameLabel, teamLabel, roleLabel, birthDateLabel, deleteButton);
+                            ledenTable.add(rowContainer, 0, rowIndex, 6, 1);
+                            rowIndex++;
+                        }
+
+                    } else {
+                        System.out.println("Fout bij updaten van lid.");
+                    }
                 } else {
-                    System.out.println("Fout bij updaten van lid.");
+                    System.out.println("Geen lid geselecteerd om op te slaan.");
                 }
-            } else {
-                System.out.println("Geen lid geselecteerd om op te slaan.");
-            }
-        });
+            });
 
 
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, pane2, ledenTable, saveButton, btnmenu);
+            VBox vbox = new VBox();
+        vbox.getChildren().addAll(hbox, pane2, ledenTable, saveButton);
         return vbox;
     }
 }

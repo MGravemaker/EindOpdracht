@@ -313,27 +313,96 @@ public class VeldenPaginaWedstrijden extends Application {
                 });
             }
 
-            btnlinks2.setOnAction(event -> {
-                if (selectedWedstrijd != null) {
-                }
-
+        btnlinks2.setOnAction(event -> {
+            if (selectedWedstrijd != null) {
                 selectedWedstrijd.TeamID = Integer.parseInt(Linkstf1.getText());
                 selectedWedstrijd.Team2Naam = Linkstf2.getText();
                 selectedWedstrijd.WedstrijdID = Integer.parseInt(Linkstf3.getText());
                 selectedWedstrijd.WedstrijdDatumTijd = Linkstf4.getText();
                 selectedWedstrijd.Veld = Linkstf5.getText();
 
-
                 boolean success = DatabaseManager.updateWedstrijd(selectedWedstrijd);
                 if (success) {
                     System.out.println("Wedstrijd succesvol bijgewerkt!");
+
+                    // Refresh Wedstrijdtable
+                    Wedstrijdtable.getChildren().clear();
+
+                    String[] headers2 = {"TeamID", "Tegenstander", "WedstrijdID", "Datum", "Veld"};
+                    for (int col3 = 0; col3 < headers2.length; col3++) {
+                        Label headerLabel2 = new Label(headers2[col3]);
+                        headerLabel2.setMinWidth(150);
+                        headerLabel2.setMinHeight(35);
+                        headerLabel2.getStyleClass().add("MenuItemText");
+                        headerLabel2.setAlignment(Pos.CENTER);
+                        Wedstrijdtable.add(headerLabel2, col3, 0);
+                    }
+
+                    List<DatabaseManager.Wedstrijd> wedstrijden2 = DatabaseManager.getWedstrijden();
+                    int row2 = 1;
+
+                    for (DatabaseManager.Wedstrijd wedstrijd : wedstrijden2) {
+                        HBox rowBox = new HBox();
+                        rowBox.setSpacing(0);
+                        rowBox.setPadding(new Insets(0));
+                        rowBox.setAlignment(Pos.CENTER_LEFT);
+                        rowBox.setStyle("-fx-background-color: transparent;");
+
+                        Label TeamIDLabel = new Label(String.valueOf(wedstrijd.TeamID));
+                        Label Team2Label = new Label(wedstrijd.Team2Naam);
+                        Label WedstrijdIDLabel = new Label(String.valueOf(wedstrijd.WedstrijdID));
+                        Label Datum = new Label(wedstrijd.WedstrijdDatumTijd);
+                        Label Veld = new Label(wedstrijd.Veld);
+
+                        TeamIDLabel.getStyleClass().add("cell-label");
+                        Team2Label.getStyleClass().add("cell-label");
+                        WedstrijdIDLabel.getStyleClass().add("cell-label");
+                        Datum.getStyleClass().add("cell-label");
+                        Veld.getStyleClass().add("cell-label");
+
+                        rowBox.setOnMouseClicked(event2 -> {
+                            selectedWedstrijd = wedstrijd;
+                            Linkstf1.setText(String.valueOf(wedstrijd.TeamID));
+                            Linkstf2.setText(wedstrijd.Team2Naam);
+                            Linkstf3.setText(String.valueOf(wedstrijd.WedstrijdID));
+                            Linkstf4.setText(wedstrijd.WedstrijdDatumTijd);
+                            Linkstf5.setText(wedstrijd.Veld);
+
+                            for (Node node : Wedstrijdtable.getChildren()) {
+                                if (node instanceof HBox) {
+                                    node.setStyle("-fx-background-color: transparent;");
+                                }
+                            }
+                            rowBox.setStyle("-fx-background-color: #b3d9ff;");
+                        });
+
+                        Button deleteButton = new Button("Delete");
+                        deleteButton.getStyleClass().add("delete-button");
+                        deleteButton.setOnAction(event2 -> {
+                            if (DatabaseManager.deleteWedstrijd(wedstrijd.WedstrijdID)) {
+                                System.out.println("Wedstrijd succesvol verwijderd!");
+                                Wedstrijdtable.getChildren().remove(rowBox);
+                            } else {
+                                System.out.println("Fout bij verwijderen van Wedstrijd.");
+                            }
+                        });
+
+                        rowBox.getChildren().addAll(TeamIDLabel, Team2Label, WedstrijdIDLabel, Datum, Veld, deleteButton);
+                        Wedstrijdtable.add(rowBox, 0, row2, 3, 1);
+                        row2++;
+                    }
+
                 } else {
                     System.out.println("Fout bij updaten van de Wedstrijd.");
                 }
-            });
+            } else {
+                System.out.println("Geen Wedstrijd geselecteerd om op te slaan.");
+            }
+        });
 
 
-            Button btnmenu = new Button("Refresh");
+
+        Button btnmenu = new Button("Refresh");
             btnmenu.setMinHeight(35);
             btnmenu.setMinWidth(152);
             btnmenu.setTranslateY(-735);
@@ -414,7 +483,7 @@ public class VeldenPaginaWedstrijden extends Application {
                 }
             });
             vbox = new VBox();
-            vbox.getChildren().addAll(hbox, pane2, Wedstrijdtable, btnmenu);
+            vbox.getChildren().addAll(hbox, pane2, Wedstrijdtable);
 
         return vbox;
     }

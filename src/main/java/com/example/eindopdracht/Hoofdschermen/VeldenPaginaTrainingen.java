@@ -299,7 +299,75 @@ public class VeldenPaginaTrainingen extends Application {
 
                 boolean success = DatabaseManager.updateTraining(selectedTraining);
                 if (success) {
-                    System.out.println("Lid succesvol bijgewerkt!");
+                    System.out.println("Training succesvol bijgewerkt!");
+
+                    // Refresh TrainingTable
+                    TrainingTable.getChildren().clear();
+
+                    String[] headers2 = {"TeamID", "TrainingID", "Datum", "Veld"};
+                    for (int col2 = 0; col2 < headers2.length; col2++) {
+                        Label headerLabel2 = new Label(headers2[col2]);
+                        headerLabel2.setMinWidth(187.5);
+                        headerLabel2.setMinHeight(35);
+                        headerLabel2.getStyleClass().add("MenuItemText");
+                        headerLabel2.setAlignment(Pos.CENTER);
+                        TrainingTable.add(headerLabel2, col2, 0);
+
+                        if (col2 == 3) {
+                            headerLabel2.setTranslateX(-340);
+                        }
+                    }
+
+                    List<DatabaseManager.Training> trainingen2 = DatabaseManager.getTrainingen();
+                    int row2 = 1;
+
+                    for (DatabaseManager.Training training : trainingen2) {
+                        HBox rowBox = new HBox();
+                        rowBox.setPadding(new Insets(0));
+                        rowBox.setAlignment(Pos.CENTER_LEFT);
+                        rowBox.setStyle("-fx-background-color: transparent;");
+
+                        Label TeamIDLabel = new Label(String.valueOf(training.TeamID));
+                        Label TrainingIDLabel = new Label(String.valueOf(training.TrainingID));
+                        Label Datum = new Label(String.valueOf(training.TrainingDatumTijd));
+                        Label Veld = new Label(training.Veld);
+
+                        TeamIDLabel.getStyleClass().add("cell-label3");
+                        TrainingIDLabel.getStyleClass().add("cell-label3");
+                        Datum.getStyleClass().add("cell-label3");
+                        Veld.getStyleClass().add("cell-label3");
+
+                        rowBox.setOnMouseClicked(event2 -> {
+                            selectedTraining = training;
+                            Linkstf1.setText(String.valueOf(training.TeamID));
+                            Linkstf2.setText(String.valueOf(training.TrainingID));
+                            Linkstf3.setText(String.valueOf(training.TrainingDatumTijd));
+                            Linkstf4.setText(training.Veld);
+
+                            for (Node node : TrainingTable.getChildren()) {
+                                if (node instanceof HBox) {
+                                    node.setStyle("-fx-background-color: transparent;");
+                                }
+                            }
+                            rowBox.setStyle("-fx-background-color: #b3d9ff;");
+                        });
+
+                        Button deleteButton = new Button("Delete");
+                        deleteButton.getStyleClass().add("delete-button");
+                        deleteButton.setOnAction(event2 -> {
+                            if (DatabaseManager.deleteTraining(training.TrainingID)) {
+                                System.out.println("Training succesvol verwijderd!");
+                                TrainingTable.getChildren().remove(rowBox);
+                            } else {
+                                System.out.println("Fout bij verwijderen van training.");
+                            }
+                        });
+
+                        rowBox.getChildren().addAll(TeamIDLabel, TrainingIDLabel, Datum, Veld, deleteButton);
+                        TrainingTable.add(rowBox, 0, row2, 3, 1);
+                        row2++;
+                    }
+
                 } else {
                     System.out.println("Fout bij updaten van Training.");
                 }
@@ -307,6 +375,7 @@ public class VeldenPaginaTrainingen extends Application {
                 System.out.println("Geen Training geselecteerd om op te slaan.");
             }
         });
+
 
         Button btnmenu = new Button("Refresh");
         btnmenu.setMinHeight(35);
@@ -386,7 +455,7 @@ public class VeldenPaginaTrainingen extends Application {
 
         });
                     VBox vbox = new VBox();
-                    vbox.getChildren().addAll(hbox, pane2, TrainingTable, btnmenu);
+                    vbox.getChildren().addAll(hbox, pane2, TrainingTable);
 
 
         return vbox;
